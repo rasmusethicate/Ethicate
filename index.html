@@ -172,11 +172,11 @@ const CATS = [
   {id:"social",label:"Social Responsibility", icon:"◉", desc:"Community investment, philanthropy"},
 ];
 const GUIDE = [
-  {s:1,color:"#D94F4F",label:"Proven Violation",    desc:"Confirmed breach or worst in industry."},
-  {s:2,color:"#E07B3A",label:"Under Suspicion",     desc:"Ongoing investigations or serious allegations."},
-  {s:3,color:"#C9A84C",label:"Neutral",             desc:"No notable positive or negative record."},
-  {s:4,color:"#8BC45A",label:"Exceeds Standards",   desc:"Voluntarily goes beyond regulations."},
   {s:5,color:"#4CAF82",label:"Industry Frontrunner",desc:"Standard-setter for the entire industry."},
+  {s:4,color:"#8BC45A",label:"Exceeds Standards",   desc:"Voluntarily goes beyond regulations."},
+  {s:3,color:"#C9A84C",label:"Neutral",             desc:"No notable positive or negative record."},
+  {s:2,color:"#E07B3A",label:"Under Suspicion",     desc:"Ongoing investigations or serious allegations."},
+  {s:1,color:"#D94F4F",label:"Proven Violation",    desc:"Confirmed breach or worst in industry."},
 ];
 
 // ── App state ─────────────────────────────────────────────────────
@@ -204,18 +204,28 @@ function seedRatings() {
 }
 seedRatings();
 
+// ── Store source URLs per company+category ────────────────────────
+let sourceUrls = {}; // key: companyId_catId → array of URLs
+
 // ── Load real ratings from Supabase ──────────────────────────────
 async function loadRatings() {
-  const { data, error } = await sb.from("ratings").select("company_id, category, score");
+  const { data, error } = await sb.from("ratings").select("company_id, category, score, source_url");
   if (error || !data) return;
   // Reset to base seed then layer real ratings on top
   seedRatings();
+  sourceUrls = {};
   data.forEach(row => {
     if (!ratings[row.company_id]) return;
     if (!ratings[row.company_id][row.category]) return;
-    // Add real vote on top of seed base
     ratings[row.company_id][row.category].total += row.score;
     ratings[row.company_id][row.category].count += 1;
+    if (row.source_url) {
+      const key = row.company_id + "_" + row.category;
+      if (!sourceUrls[key]) sourceUrls[key] = [];
+      if (!sourceUrls[key].includes(row.source_url)) {
+        sourceUrls[key].push(row.source_url);
+      }
+    }
   });
   renderGrid();
 }
@@ -402,7 +412,8 @@ function showCompany(co) {
             <span style="font-size:10px;color:#2a3a5a">${cr[cat.id].count} ratings</span>
           </div>
           ${ur ? `<div style="background:#C9A84C0d;border:1px solid #C9A84C22;border-radius:2px;padding:6px 10px;font-size:10px;color:#C9A84C;margin-bottom:8px">Your rating: ${ur.score} star${ur.score!==1?"s":""}</div>` : ""}
-          <button class="ghost-btn" style="width:100%;font-size:10px" onclick="openModal(COMPANIES.find(x=>x.id==='${co.id}'), CATS.find(x=>x.id==='${cat.id}'))">${ur ? "Update Rating" : "Rate This"}</button>
+          <button class="ghost-btn" style="width:100%;font-size:10px;margin-bottom:${ur&&ur.url?'8px':'0'}" onclick="openModal(COMPANIES.find(x=>x.id==='${co.id}'), CATS.find(x=>x.id==='${cat.id}'))">${ur ? "Update Rating" : "Rate This"}</button>
+          ${(()=>{ const urls = sourceUrls[co.id+"_"+cat.id]||[]; return urls.length ? `<div style="margin-top:6px"><div style="font-size:9px;letter-spacing:1.5px;color:#2a3a4a;text-transform:uppercase;margin-bottom:4px">Sources</div>${urls.map(u=>`<div style="margin-bottom:3px"><a href="${u}" target="_blank" rel="noopener noreferrer" style="font-size:10px;color:#C9A84C;word-break:break-all">${u}</a></div>`).join("")}</div>` : ""; })()}
         </div>`;
       }).join("")}
     </div>`;
