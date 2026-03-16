@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ethicate — Danish Corporate Ethics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b1120;color:#e8eaf2;font-family:'DM Sans',sans-serif;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#0b1120}::-webkit-scrollbar-thumb{background:#1e2e4a;border-radius:2px}
+a{color:#C9A84C;text-decoration:none}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+nav{border-bottom:1px solid #1a2744;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0b1120ee;backdrop-filter:blur(10px);z-index:50}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo span{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;letter-spacing:3px}
+.gold-btn{background:#C9A84C;color:#0b1120;border:none;padding:8px 20px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px}
+.gold-btn:hover{background:#dabe6e}
+.ghost-btn{background:transparent;color:#C9A84C;border:1px solid #C9A84C44;padding:7px 18px;font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px}
+.ghost-btn:hover{border-color:#C9A84C99;background:#C9A84C0d}
+.card{background:#111b30;border:1px solid #1a2744;border-radius:4px;padding:18px;cursor:pointer;transition:all .2s}
+.card:hover{border-color:#C9A84C33;transform:translateY(-1px);box-shadow:0 8px 24px #0008}
+.sec-btn{background:transparent;border:1px solid #1a2744;border-radius:2px;padding:5px 10px;font-size:11px;color:#5a6a8a;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.sec-btn:hover{border-color:#2a3a5e;color:#9aaabf}
+.sec-btn.active{background:#C9A84C1a;border-color:#C9A84C55;color:#C9A84C}
+.pg{background:transparent;border:1px solid #1a2744;border-radius:2px;padding:4px 10px;font-size:12px;color:#5a6a8a;cursor:pointer;min-width:32px;font-family:'DM Sans',sans-serif}
+.pg:hover{color:#9aaabf;border-color:#2a3a5e}
+.pg.active{background:#C9A84C1a;border-color:#C9A84C55;color:#C9A84C}
+.pg:disabled{opacity:.3;cursor:default}
+.ipt{width:100%;background:#0c1525;border:1px solid #1e2e4a;border-radius:2px;padding:10px 12px;color:#e8eaf2;font-family:'DM Sans',sans-serif;font-size:13px;outline:none}
+.mini-bar{height:4px;background:#1a2744;border-radius:2px;overflow:hidden}
+.toast-el{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111b30;border:1px solid #C9A84C44;border-left:3px solid #C9A84C;padding:11px 22px;border-radius:2px;font-size:13px;color:#e8eaf2;z-index:300;white-space:nowrap;animation:fadeup .3s ease}
+@keyframes fadeup{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.modal-bg{position:fixed;inset:0;background:#000a;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:#111b30;border:1px solid #253555;border-radius:5px;padding:28px;width:100%;max-width:460px;position:relative;max-height:90vh;overflow-y:auto}
+.star svg{cursor:pointer;transition:transform .1s}
+.star svg:hover{transform:scale(1.25)}
+#view-home,#view-company,#view-auth{display:none}
+footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:40px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="showHome()">
+    <svg width="22" height="22" viewBox="0 0 28 28"><polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#C9A84C" stroke-width="1.5"/><polygon points="14,6 22,10 22,18 14,22 6,18 6,10" fill="#C9A84C18"/></svg>
+    <span>ETHICATE</span>
+  </div>
+  <div style="display:flex;gap:16px;align-items:center" id="nav-right">
+    <span style="font-size:11px;color:#5a6a8a;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showAuth('login')">Sign in</span>
+    <button class="gold-btn" onclick="showAuth('register')">Join Free</button>
+  </div>
+</nav>
+
+<div id="view-home">
+  <div style="max-width:1240px;margin:0 auto;padding:48px 24px">
+    <!-- Hero -->
+    <div style="text-align:center;margin-bottom:48px">
+      <p style="font-size:10px;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:14px">Denmark's Corporate Ethics Monitor</p>
+      <h1 class="serif" style="font-size:clamp(36px,6vw,68px);font-weight:300;line-height:1.1;margin-bottom:14px">Hold Companies<br><em style="color:#C9A84C">Accountable.</em></h1>
+      <p style="font-size:14px;color:#6a7a9a;max-width:420px;margin:0 auto 24px;line-height:1.8">Rate Denmark's 293 largest companies on ethics, environment, human rights, legal compliance, tax, and social responsibility.</p>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="gold-btn" style="padding:11px 28px" onclick="showAuth('register')">Start Rating</button>
+        <button class="ghost-btn" onclick="document.getElementById('companies').scrollIntoView({behavior:'smooth'})">Browse Companies</button>
+      </div>
+    </div>
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1a2744;border-radius:4px;overflow:hidden;margin-bottom:36px">
+      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">293</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Companies</div></div>
+      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">6</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Categories</div></div>
+      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">42</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Sectors</div></div>
+      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">Free</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">To Use</div></div>
+    </div>
+    <!-- Guide -->
+    <div style="background:#0c1525;border:1px solid #1a2744;border-radius:4px;padding:18px 22px;margin-bottom:36px">
+      <p style="font-size:9px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:10px">The Ethicate Star Scale</p>
+      <div style="display:flex;gap:16px;flex-wrap:wrap" id="guide-row"></div>
+    </div>
+    <!-- Controls -->
+    <div id="companies">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+        <h2 class="serif" style="font-size:22px;font-weight:400">All Companies</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select id="sort-sel" onchange="sortChanged()" style="background:#111b30;border:1px solid #1a2744;border-radius:2px;padding:7px 10px;color:#e8eaf2;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer">
+            <option value="revenue">By Revenue</option>
+            <option value="name">By Name</option>
+            <option value="rating">By Rating</option>
+          </select>
+          <div style="position:relative">
+            <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%)" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3a4a6b" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="search-inp" style="background:#111b30;border:1px solid #1a2744;border-radius:2px;padding:7px 12px 7px 30px;color:#e8eaf2;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;width:200px" placeholder="Search…" oninput="searchChanged()"/>
+          </div>
+        </div>
+      </div>
+      <div id="sector-btns" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"></div>
+      <p id="count-label" style="font-size:11px;color:#2a3a5a;margin-bottom:14px"></p>
+      <div id="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:12px;margin-bottom:22px"></div>
+      <div id="pagination" style="display:flex;justify-content:center;gap:4px;flex-wrap:wrap"></div>
+    </div>
+  </div>
+  <footer>
+    <div style="display:flex;align-items:center;gap:8px">
+      <svg width="14" height="14" viewBox="0 0 28 28"><polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#C9A84C" stroke-width="1.5"/></svg>
+      <span style="font-size:11px;letter-spacing:2px;color:#2a3a5a">ETHICATE — Corporate Ethics for Denmark</span>
+    </div>
+    <span style="font-size:10px;color:#2a3a5a">293 companies · Citizen-powered · Independent</span>
+  </footer>
+</div>
+
+<div id="view-company">
+  <div style="max-width:820px;margin:0 auto;padding:36px 24px" id="company-content"></div>
+</div>
+
+<div id="view-auth">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:80vh;padding:24px">
+    <div style="width:100%;max-width:360px">
+      <div style="text-align:center;margin-bottom:30px">
+        <svg width="30" height="30" viewBox="0 0 28 28" style="margin-bottom:12px"><polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#C9A84C" stroke-width="1.5"/><polygon points="14,6 22,10 22,18 14,22 6,18 6,10" fill="#C9A84C18"/></svg>
+        <h1 class="serif" id="auth-title" style="font-size:26px;font-weight:300;margin-bottom:4px"></h1>
+        <p id="auth-sub" style="font-size:13px;color:#6a7a9a"></p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <input class="ipt" id="auth-name" placeholder="Your name" style="display:none"/>
+        <input class="ipt" id="auth-email" type="email" placeholder="Email address"/>
+        <input class="ipt" id="auth-pw" type="password" placeholder="Password"/>
+        <button class="gold-btn" style="width:100%;padding:12px;margin-top:4px" id="auth-submit-btn"></button>
+        <p style="font-size:13px;color:#6a7a9a;text-align:center" id="auth-switch"></p>
+        <p style="font-size:13px;color:#6a7a9a;text-align:center;cursor:pointer" onclick="showHome()">← Back</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button onclick="closeModal()" style="position:absolute;top:10px;right:14px;background:none;border:none;color:#3a4a6b;font-size:20px;cursor:pointer">×</button>
+    <p id="m-company" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:4px"></p>
+    <h2 class="serif" id="m-cat" style="font-size:22px;font-weight:400;margin-bottom:14px"></h2>
+    <div style="background:#0c1525;border:1px solid #1a2744;border-radius:3px;padding:10px 14px;margin-bottom:16px">
+      <p style="font-size:9px;letter-spacing:2px;color:#3a4a6b;text-transform:uppercase;margin-bottom:8px">What each star means</p>
+      <div id="m-guide" style="display:flex;flex-direction:column;gap:5px"></div>
+    </div>
+    <p style="font-size:10px;letter-spacing:2px;color:#6a7a9a;text-transform:uppercase;margin-bottom:10px">Your Rating</p>
+    <div id="m-stars" style="display:flex;gap:6px;margin-bottom:8px"></div>
+    <p id="m-label" style="font-size:12px;margin-bottom:16px;min-height:18px"></p>
+    <div style="height:1px;background:#1a2744;margin-bottom:14px"></div>
+    <p style="font-size:10px;letter-spacing:2px;color:#6a7a9a;text-transform:uppercase;margin-bottom:6px">Source URL <span style="color:#2a3a5e;letter-spacing:0;text-transform:none">— optional</span></p>
+    <input class="ipt" id="m-url" placeholder="https://example.com/article" style="margin-bottom:14px"/>
+    <button class="gold-btn" id="m-submit" style="width:100%;padding:12px" onclick="submitRating()">Submit Rating</button>
+  </div>
+</div>
+
+<script>
+const SECTOR_NAMES = ["Agriculture & Food","Banking & Finance","Beverages","Biotechnology","Broadcasting","Building Materials","Chemicals","Clothing & Fashion","Construction","Consumer Electronics","Consumer Goods / Toys","Defense & Aerospace","Diversified Holdings","Education","Energy & Utilities","Engineering","Facility Services","Food & Dairy","Food Manufacturing","Forestry","Healthcare","Hotels & Accommodation","IT & Software","Insurance","Jewellery & Retail","Management Consulting","Medical Devices","Mining & Quarrying","Motor Vehicle Trade","Oil & Gas","Pharmaceuticals","Publishing","Real Estate","Renewable Energy","Retail Trade","Shipping & Logistics","Sports & Recreation","Telecommunications","Textiles","Transport & Logistics","Waste & Recycling","Wholesale Trade"];
+const RAW = [["ap_moller_holding","A.P. Møller Holding A/S",12,"Copenhagen","2003",424800,"25562243"],["novo_nordisk_fonden","Novo Nordisk Fonden",30,"Gentofte","1989",342800,"11776627"],["novo_nordisk","Novo Nordisk A/S",30,"Bagsværd","1923",229900,"24256790"],["iss_global","ISS Global A/S",16,"Gladsaxe","1901",83800,"28508441"],["kirkbi","KIRKBI A/S",12,"Billund","2001",77300,"37862695"],["mind_energy","Mind Energy A/S",14,"Aarhus","2000",76600,"25086707"],["carlsberg_breweries","Carlsberg Breweries A/S",2,"Copenhagen","1847",75000,"25508352"],["lego_as","LEGO A/S",10,"Billund","1932",74300,"54169910"],["danish_crown_amba","Danish Crown AMBA",17,"Randers","1998",65400,"21513217"],["dlg","Dansk Landbrugs Grovvareselskab A.M.B.A.",0,"Fredericia","1970",56100,"27394808"],["lego_system","LEGO System A/S",10,"Billund","1955",55600,"47116219"],["vestas_mfg","Vestas Manufacturing A/S",33,"Aarhus","1945",45100,"10414702"],["iss_as","ISS A/S",16,"Gladsaxe","1901",41600,"28508441"],["lundbeckfonden","Lundbeckfonden",30,"Copenhagen","1954",39700,"11809404"],["grundfos_holding","Grundfos Holding A/S",15,"Bjerringbro","1945",33200,"26134516"],["coop_danmark","Coop Danmark A/S",34,"Albertslund","1896",31100,"27868984"],["coloplast","Coloplast A/S",26,"Humlebæk","1957",27900,"69749917"],["siemens_gamesa","Siemens Gamesa Renewable Energy A/S",33,"Ikast","2017",26400,"35775623"],["danish_crown_as","Danish Crown A/S",17,"Randers","1998",26100,"21513217"],["rema_distribution","REMA Distribution Danmark A/S",34,"Horsens","1981",25800,"15312616"],["skandinavisk_motor","Skandinavisk Motor Co. A/S",28,"Brøndby","1927",24800,"16626882"],["demant","Demant A/S",20,"Smørum","1904",23000,"36476944"],["per_aarsleff_holding","Per Aarsleff Holding A/S",8,"Aarhus","1947",22600,"16774409"],["orsted_wind","Ørsted Wind Power A/S",33,"Fredericia","1972",21100,"36213728"],["salling_group","Salling Group A/S",34,"Aarhus","1906",20800,"35954716"],["bestseller","BESTSELLER A/S",7,"Ikast","1975",20600,"16315839"],["velux","VELUX A/S",5,"Hørsholm","1941",18000,"54084516"],["biomar","BioMar Group A/S",18,"Aarhus","1962",16600,"25704029"],["arla_foods","Arla Foods AMBA",17,"Aarhus","2000",15100,"25313763"],["semler_mobility","Semler Mobility Retail A/S",28,"Brøndby","1946",14700,"10241021"],["microsoft_dk","Microsoft Danmark ApS",22,"Lyngby","1985",14600,"13529797"],["nuuday","Nuuday A/S",37,"Copenhagen","2019",14600,"40075175"],["dagrofa","Dagrofa Logistik A/S",17,"Vejle","1958",14500,"38117432"],["bunker_holding","Bunker Holding A/S",35,"Middelfart","1979",13700,"16621498"],["leo_pharma","LEO Pharma A/S",30,"Ballerup","1908",13500,"56759514"],["ok_amba","OK A.M.B.A.",14,"Aarhus","1899",12200,"22956730"],["falck","Falck A/S",20,"Copenhagen","1906",12100,"22756088"],["circle_k","Circle K Danmark A/S",34,"Copenhagen","1981",11900,"13210310"],["nomeco","Nomeco A/S",30,"Copenhagen","1919",11500,"16731509"],["normal","Normal A/S",34,"Skanderborg","2013",11000,"33591415"],["bygma_gruppen","Bygma Gruppen A/S",5,"Gladsaxe","1980",10700,"17064085"],["orifarm","Orifarm Supply A/S",30,"Odense","1994",10500,"20550259"],["orsted_bioenergy","Ørsted Bioenergy & Thermal Power A/S",33,"Fredericia","1972",10100,"32483699"],["stark_denmark","Stark Danmark A/S",5,"Aarhus","1896",9900,"69345316"],["discount365","365discount A/S",34,"Albertslund","1998",9800,"20820395"],["danfoss","Danfoss A/S",15,"Nordborg","1933",9700,"20165715"],["danish_agro","Danish Agro A.M.B.A.",0,"Faxe","1901",8600,"36764716"],["topsoe_holding","Topsøe Holding A/S",6,"Lyngby","1940",8400,"26367819"],["ejner_hessel","Ejner Hessel A/S",28,"Ikast","1944",8200,"10148215"],["per_aarsleff","Per Aarsleff A/S",8,"Aarhus","1947",8100,"16774409"],["oticon","Oticon A/S",20,"Smørum","1904",7700,"26591728"],["also","ALSO A/S",22,"Høje-Taastrup","1988",7700,"61560513"],["bygma","Bygma A/S",5,"Gladsaxe","1980",7500,"17064085"],["dsv_road","DSV Road A/S",39,"Høje-Taastrup","1976",7500,"35314660"],["lemvigh_muller","Lemvigh-Müller A/S",41,"Herlev","1869",7100,"59174510"],["arla_ingredients","Arla Foods Ingredients Group P/S",17,"Aarhus","2000",6800,"32899439"],["chr_hansen","Chr. Hansen A/S",6,"Hørsholm","1874",6700,"10150616"],["ncc_denmark","NCC Danmark A/S",8,"Gladsaxe","1988",6600,"62915714"],["jysk","JYSK A/S",34,"Aarhus","1979",6500,"20655014"],["tdc_net","TDC NET A/S",37,"Copenhagen","2019",6500,"40075167"],["mt_hojgaard","MT Højgaard Holding A/S",8,"Søborg","1919",6400,"15704215"],["elgiganten","Elgiganten A/S",34,"Copenhagen","1985",6200,"16586439"],["q8","Q8 Danmark A/S",14,"Copenhagen","1982",6200,"10055020"],["vestas","Vestas Wind Systems A/S",33,"Aarhus","1945",6100,"10416740"],["pandora","Pandora A/S",24,"Copenhagen","1982",5900,"28505116"],["novozymes","Novozymes A/S",3,"Bagsværd","2000",5800,"10007127"],["dsv","DSV Panalpina A/S",39,"Hedehusene","1976",5700,"58233528"],["rockwool","Rockwool Group A/S",5,"Hedehusene","1909",5600,"54879415"],["carlsberg_group","Carlsberg Group",2,"Copenhagen","1847",5500,"61056416"],["dfds","DFDS A/S",35,"Copenhagen","1866",5400,"14194285"],["gn_store_nord","GN Store Nord A/S",20,"Ballerup","1869",5300,"65746417"],["tryg","Tryg A/S",23,"Ballerup","2002",5200,"26460212"],["h_lundbeck","H. Lundbeck A/S",30,"Copenhagen","1915",5200,"56759515"],["aldi_dk","ALDI Danmark",34,"Mørkøv","1977",5100,"55760116"],["lidl_dk","Lidl Danmark K/S",34,"Glostrup","2005",5000,"25308579"],["nkt","NKT A/S",15,"Brøndby","1891",4900,"62274516"],["maersk","A.P. Møller-Mærsk A/S",35,"Copenhagen","1904",4800,"22756811"],["nykredit","Nykredit A/S",1,"Copenhagen","1851",4800,"10519238"],["orsted","Ørsted A/S",33,"Fredericia","1972",4700,"36213728"],["danskebank","Danske Bank A/S",1,"Copenhagen","1871",4600,"61126228"],["topdanmark","Topdanmark A/S",23,"Ballerup","1898",4500,"78040015"],["scandinavian_tobacco","Scandinavian Tobacco Group A/S",2,"Copenhagen","1961",4500,"32297715"],["nrgi","NRGi A.m.b.a.",14,"Aarhus","2000",4400,"14093414"],["sp_group","SP Group A/S",15,"Middelfart","1915",4300,"15427691"],["energinet","Energinet",14,"Fredericia","2005",4200,"28113528"],["dtu","Danmarks Tekniske Universitet",13,"Lyngby","1829",4100,"30060946"],["post_dk","PostNord Danmark A/S",39,"Copenhagen","2009",4100,"26890103"],["royal_unibrew","Royal Unibrew A/S",2,"Faxe","1989",4000,"41460728"],["ambu","Ambu A/S",26,"Ballerup","1937",4000,"32053491"],["alm_brand","Alm. Brand A/S",23,"Copenhagen","1792",3900,"77333517"],["dfp_dk","Danica Pension Livsforsikringsaktieselskab",23,"Copenhagen","1842",3900,"24256655"],["jyske_bank","Jyske Bank A/S",1,"Silkeborg","1967",3800,"17616617"],["egmont","Egmont Group A/S",31,"Copenhagen","1878",3800,"30064913"],["sydbank","Sydbank A/S",1,"Aabenraa","1970",3700,"12626509"],["scan_global","Scan Global Logistics A/S",39,"Copenhagen","2007",3600,"28200715"],["nordea_dk","Nordea Bank Danmark A/S",1,"Copenhagen","1990",3600,"25992180"],["schur_international","Schur International A/S",18,"Horsens","1869",3500,"10081516"],["pfa_pension","PFA Pension Forsikringsaktieselskab",23,"Copenhagen","1917",3500,"25425095"],["ramboll","Ramboll Group A/S",15,"Copenhagen","1945",3400,"10160669"],["blue_water_shipping","Blue Water Shipping A/S",35,"Esbjerg","1972",3400,"10793715"],["fls_industries","FLSmidth & Co. A/S",15,"Copenhagen","1882",3300,"58180912"],["nnit","NNIT A/S",22,"Copenhagen","1994",3200,"21751558"],["telia_dk","Telia Danmark A/S",37,"Copenhagen","2000",3200,"24218717"],["william_demant_holding","William Demant Holding A/S",20,"Smørum","1955",3200,"71186528"],["gabriel_holding","Gabriel Holding A/S",38,"Aalborg","1851",3100,"58862414"],["royal_greenland","Royal Greenland A/S",17,"Nuuk (DK HQ)","1990",3100,"30474016"],["alk_abello","ALK-Abelló A/S",30,"Hørsholm","1923",3000,"63771028"],["radiometer","Radiometer Medical ApS",26,"Brønshøj","1935",2900,"27360715"],["genmab","Genmab A/S",3,"Copenhagen","1999",2800,"21023513"],["telenor_dk","Telenor Danmark A/S",37,"Ballerup","1999",2800,"20161415"],["atp","ATP (Arbejdsmarkedets Tillægspension)",23,"Hillerød","1964",2800,"43405810"],["dr","DR (Danmarks Radio)",4,"Copenhagen","1925",2800,"62786515"],["netcompany","Netcompany Group A/S",22,"Copenhagen","2000",2700,"14918814"],["flsmidth","FLSmidth Mining A/S",27,"Copenhagen","1882",2700,"58180912"],["velux_group","VELUX Group",5,"Hørsholm","1941",2600,"54084516"],["nordic_waste","Nordic Waste A/S",40,"Copenhagen","2009",2500,"30615915"],["hempel","Hempel A/S",6,"Kgs. Lyngby","1915",2500,"60002015"],["gabriel","Gabriel A/S",38,"Aalborg","1851",2400,"58862414"],["tc_group","TC Group A/S",15,"Roskilde","1960",2400,"15616615"],["aker_solutions_dk","Aker Solutions Denmark A/S",29,"Copenhagen","2010",2400,"33076828"],["3_dk","3 (Hi3G Denmark ApS)",37,"Copenhagen","2003",2400,"25628717"],["bladt_industries","Bladt Industries A/S",33,"Aalborg","1945",2300,"15415116"],["novo_enzymes","Novonesis (Novozymes) A/S",3,"Bagsværd","2000",2300,"10007127"],["dampskibsselskabet","Dampskibsselskabet Norden A/S",35,"Copenhagen","1871",2200,"67756817"],["stena_dk","Stena Line Denmark A/S",35,"Frederikshavn","1962",2200,"24218729"],["nilfisk","Nilfisk A/S",15,"Brøndby","1906",2200,"30631901"],["yousee","YouSee A/S",37,"Copenhagen","2003",2200,"26091928"],["realkredit_dk","Realkredit Danmark A/S",1,"Copenhagen","1851",2200,"13399174"],["harboe","Harboes Bryggeri A/S",2,"Skælskør","1883",2100,"43614528"],["atea","Atea A/S",22,"Copenhagen","1987",2100,"25963000"],["saxo_bank","Saxo Bank A/S",1,"Copenhagen","1992",2100,"15731249"],["tv2","TV 2 Danmark A/S",4,"Odense","1988",2100,"10418814"],["nkt_cables","NKT Cables Group A/S",15,"Brøndby","1891",2000,"20435715"],["thrane_thrane","Thrane & Thrane A/S",37,"Lyngby","1981",2000,"10150013"],["bang_olufsen","Bang & Olufsen A/S",9,"Struer","1925",1950,"41257911"],["mikkeller","Mikkeller A/S",2,"Copenhagen","2006",1900,"32073028"],["green_hydrogen","Green Hydrogen Systems A/S",33,"Kolding","2007",1900,"31386215"],["christian_hansen_chr","Chr. Hansen Holding A/S",6,"Hørsholm","1874",1900,"10074287"],["brdr_hartmann","Brdr. Hartmann A/S",18,"Gentofte","1917",1900,"63636917"],["pihl_son","Pihl & Søn A/S",8,"Copenhagen","1897",1900,"51246714"],["bww_group","BWW Group A/S",35,"Copenhagen","1997",1850,"21815115"],["codan","Codan Forsikring A/S",23,"Copenhagen","1915",1800,"10529638"],["tech_mah_dk","Tech Mahindra Denmark A/S",22,"Copenhagen","2010",1800,"32626028"],["dhl_dk","DHL Express Denmark A/S",39,"Kastrup","1990",1800,"16316215"],["unifeeder","Unifeeder A/S",35,"Aarhus","1977",1800,"20731328"],["abn_amro_dk","ABN AMRO Bank N.V. (DK Branch)",1,"Copenhagen","2000",1750,"80038912"],["ringkoebing_landbo","Ringkøbing Landbobank A/S",1,"Ringkøbing","1886",1700,"37658528"],["scandic_hotels","Scandic Hotels Danmark A/S",21,"Copenhagen","1963",1700,"25071828"],["ncc_property","NCC Property Development A/S",32,"Gladsaxe","1990",1650,"18749015"],["siemens_dk","Siemens A/S",15,"Ballerup","1893",1600,"16357015"],["terma","Terma A/S",11,"Aarhus","1949",1600,"65839414"],["cphairport","Kastrup Lufthavn A/S (CPH)",39,"Copenhagen","1925",1600,"14180516"],["sampension","Sampension KP Livsforsikring A/S",23,"Gentofte","1945",1600,"14073715"],["hojgaard_schultz","HB&GBS (Højgaard & Schultz A/S)",8,"Søborg","1919",1600,"15704215"],["banedanmark","Banedanmark",39,"Copenhagen","2001",1550,"18632418"],["dsb","DSB (Danske Statsbaner)",39,"Copenhagen","1885",1550,"25050053"],["sydenergi","SE (Syd Energi A.m.b.a.)",14,"Esbjerg","1908",1500,"20281128"],["brd_price","Brdr. Price A/S",34,"Copenhagen","1937",1500,"10151215"],["iss_facility","ISS Facility Services A/S",16,"Copenhagen","1901",1500,"28508441"],["gls_dk","GLS Denmark A/S",39,"Horsens","1999",1500,"25669680"],["evida","Evida Holding A/S",14,"Fredericia","2020",1480,"40885039"],["verdo","Verdo Holding A/S",14,"Randers","1903",1460,"14281428"],["sanistaal","Sanistaal A/S",41,"Aalborg","1933",1450,"54810716"],["aerojet_dk","Naviair (Luftfartsvæsenet)",39,"Copenhagen","1990",1400,"26919916"],["bavarian_nordic","Bavarian Nordic A/S",30,"Hellerup","1994",1400,"16271187"],["ascendis_pharma","Ascendis Pharma A/S",30,"Copenhagen","2007",1400,"29918230"],["totalkredit","Totalkredit A/S",1,"Copenhagen","1990",1400,"40621817"],["aller_client","JP/Politikens Hus A/S",31,"Copenhagen","1884",1400,"26636714"],["niras","NIRAS A/S",15,"Allerød","1956",1400,"37295728"],["clipper_group","Clipper Group A/S",35,"Copenhagen","1972",1400,"25617928"],["simcorp","SimCorp A/S",22,"Copenhagen","1971",1380,"15505028"],["via_trafik","Via Trafik Rådgivning A/S",15,"Copenhagen","1997",1350,"20819628"],["european_energy","European Energy A/S",33,"Copenhagen","2004",1350,"26221328"],["dk_forsyning","DIN Forsyning A/S",14,"Esbjerg","2015",1300,"37083428"],["bravida","Bravida Danmark A/S",8,"Copenhagen","2000",1300,"28414916"],["enemærke_petersen","Enemærke & Petersen A/S",8,"Copenhagen","1949",1300,"17066715"],["elbek_vejrup","Elbek & Vejrup A/S",22,"Aarhus","1989",1280,"20205028"],["york_pharma","Recipharm Denmark A/S",30,"Horsens","1940",1260,"25302715"],["mors_smba","Mors SMBA",14,"Nykøbing Mors","1912",1250,"11410614"],["nissens","Nissens Automotive A/S",28,"Horsens","1921",1240,"38131814"],["velux_commercial","VELUX Commercial A/S",5,"Kolding","1998",1200,"23081428"],["energi_viborg","Energi Viborg A/S",14,"Viborg","1913",1200,"25310428"],["aller_media","Aller Media A/S",31,"Copenhagen","1873",1200,"25311628"],["stark_group_holding","Stark Group A/S (Holdings)",5,"Frederiksberg","1896",1180,"40277328"],["bitten_mads","Bitten og Mads Clausens Fond",12,"Sønderborg","1988",1150,"17779215"],["alm_brand_forsikring","Alm. Brand Forsikring A/S",23,"Copenhagen","1792",1140,"10546528"],["force_technology","Force Technology A/S",15,"Brøndby","1952",1100,"53788628"],["coloplast_manufacturing","Coloplast Manufacturing A/S",26,"Thisted","1957",1100,"69749917"],["bring_dk","Bring Logistics Denmark A/S",39,"Kolding","2010",1100,"33561428"],["brd_sorensen","Brdr. Sørensen A/S",8,"Frederikssund","1960",1100,"20655628"],["dk_haandvaerk","DK Håndværk og Industri A/S",8,"Aarhus","1999",1100,"22530928"],["rigshospitalet","Rigshospitalet",20,"Copenhagen","1757",1080,"33657328"],["aarhus_university","Aarhus Universitet",13,"Aarhus","1928",1050,"31119103"],["kobenhavns_energi","Hofor A/S",14,"Copenhagen","1857",1040,"25728028"],["hofor","HOFOR A/S",14,"Copenhagen","1857",1040,"25728028"],["thiele","Thiele A/S",34,"Copenhagen","1897",1030,"18607615"],["bisnow_nordic","Roskilde Amt Forsyning A/S",14,"Roskilde","2007",1020,"29718528"],["nissens_cooling","Nissens Cooling Solutions A/S",15,"Horsens","1921",1010,"38131814"],["dong_energy_sales","Ørsted Sales A/S",14,"Fredericia","2009",1000,"30951428"],["ph_tarm","PH Tarm A/S",14,"Tarm","1905",980,"14181228"],["eac","EAC Group A/S",12,"Copenhagen","1897",980,"67466528"],["albani_bryggerierne","Albani Bryggerierne A/S",2,"Odense","1859",960,"56381816"],["systematic","Systematic A/S",22,"Aarhus","1985",960,"25414428"],["svitzer","Svitzer A/S",35,"Copenhagen","1833",950,"10017928"],["widex","Widex A/S",20,"Lynge","1956",940,"10086228"],["phd_ventures","Ph.D. Ventures A/S",12,"Copenhagen","2012",920,"34093528"],["staldmester","Staldmestergruppen A/S",0,"Viborg","1990",910,"16226428"],["dk_retailing","Netto A/S",34,"Aarhus","1981",900,"10979015"],["fedex_dk","FedEx Denmark A/S",39,"Copenhagen","1995",900,"19030628"],["vestas_services","Vestas Service A/S",33,"Aarhus","2000",890,"26921328"],["vestas_tech","Vestas Technology A/S",33,"Aarhus","2001",890,"26921428"],["flügger","Flügger Group A/S",6,"Copenhagen","1876",880,"62236314"],["pandora_product","Pandora Production Co. Ltd. (DK HQ)",24,"Copenhagen","1982",870,"28505116"],["martin_professional","Martin Professional A/S",9,"Aarhus","1987",860,"73157328"],["parken_sport","Parken Sport & Entertainment A/S",36,"Copenhagen","1992",850,"15077744"],["cowi","COWI A/S",15,"Kongens Lyngby","1930",840,"44623528"],["neas_energy","Norlys A/S",14,"Aarhus","2019",830,"38661428"],["green_labs","Copenhagen Infrastructure Partners A/S",33,"Copenhagen","2012",820,"33683428"],["handelsbanken_dk","Svenska Handelsbanken (DK Branch)",1,"Copenhagen","1990",820,"22038628"],["vestas_nacelles","Vestas Nacelles A/S",33,"Lem","2000",810,"27042328"],["linak","Linak A/S",15,"Nordborg","1907",800,"20960928"],["eniig","Norlys Energi A/S",14,"Viborg","1905",790,"36498528"],["christian_ix","Chr. IX Gate A/S",32,"Copenhagen","2018",780,"39238728"],["trefor","TREFOR A/S",14,"Kolding","1904",780,"20301228"],["scandlines","Scandlines Danmark ApS",35,"Copenhagen","1998",770,"20590228"],["tdc_group","TDC Group A/S",37,"Copenhagen","1882",760,"14773908"],["haldor_topsoe","Haldor Topsøe A/S",6,"Lyngby","1940",750,"41891228"],["upo_dk","UPO (United Parcel Service) Denmark ApS",39,"Kolding","1990",750,"25382428"],["3shape","3Shape A/S",26,"Copenhagen","2000",740,"23063728"],["unilabs","Unilabs Danmark A/S",20,"Copenhagen","1990",730,"20563228"],["ramboll_oil","Ramboll Energy A/S",15,"Copenhagen","1945",720,"10160669"],["co_ro","CO-RO A/S",18,"Frederikssund","1942",720,"52628128"],["spar_nord","Spar Nord Bank A/S",1,"Aalborg","1824",710,"13737584"],["imerco","Imerco A/S",34,"Copenhagen","1977",700,"73474328"],["msc_dk","MSC Denmark A/S",35,"Copenhagen","2000",690,"20716528"],["deas","DEAS Asset Management A/S",32,"Copenhagen","1967",680,"20141228"],["logistic_solutions","Logistics Solutions Group A/S",39,"Køge","2005",670,"29028728"],["skovdyrkerforeningerne","Skovdyrkerforeningerne A/S",19,"Skanderborg","1913",660,"17113628"],["genmab_2","Genmab Operations A/S",3,"Copenhagen","1999",650,"21023513"],["brdr_a_o_johansen","Brdr. A & O Johansen A/S",41,"Albertslund","1914",640,"58594928"],["cph_solutions","Copenhagen Solutions A/S",22,"Copenhagen","2015",630,"36708028"],["vkr_holding","VKR Holding A/S",5,"Hørsholm","1967",620,"79995016"],["vestforsyning","Vestforsyning A/S",14,"Holstebro","1916",620,"14774628"],["nrgi_net","NRGi Net A/S",14,"Aarhus","2000",610,"26919516"],["ecco","ECCO Sko A/S",7,"Bredebro","1963",600,"40576114"],["terma_defense","Terma Defense Electronics A/S",11,"Aarhus","1970",590,"65839414"],["aak_denmark","AAK Denmark A/S",18,"Aarhus","1871",580,"10094728"],["nve","NVE A/S (Energinet)",14,"Fredericia","2005",580,"28113528"],["codan_dk","Codan A/S",23,"Copenhagen","1915",570,"10529638"],["viterra_dk","Viterra Denmark A/S",0,"Copenhagen","2015",560,"36481628"],["kims","Kims A/S",18,"Søndersø","1963",560,"52809714"],["vestas_blades","Vestas Blades A/S",33,"Lem","2000",550,"27042428"],["coop_trading","Coop Trading A/S",34,"Albertslund","1996",540,"25879628"],["orbicon","Orbicon A/S",15,"Virum","1976",540,"21265728"],["lm_windpower","LM Wind Power A/S",33,"Kolding","1940",530,"59907414"],["dk_pharmacies","Apotekernes A/S",30,"Copenhagen","1980",520,"26297028"],["hedensted_gruppen","Hedensted Gruppen A/S",18,"Hedensted","1890",520,"18101228"],["junckers","Junckers Industrier A/S",5,"Køge","1930",510,"54488614"],["brd_klee","Brdr. Klee A/S",41,"Copenhagen","1949",500,"53487928"],["pernod_ricard_dk","Pernod Ricard Denmark A/S",2,"Copenhagen","1996",490,"20614728"],["zealand_pharma","Zealand Pharma A/S",30,"Copenhagen","1998",490,"20045078"],["dk_energi","Energi Danmark A/S",14,"Aarhus","1999",480,"25063428"],["poulsen_group","H. Poulsen & Co. A/S",41,"Esbjerg","1908",480,"10148228"],["asgard_asset","Asgard Asset Management A/S",32,"Copenhagen","2010",470,"33176028"],["kk_wind","KK Wind Solutions A/S",33,"Ikast","1991",460,"25432628"],["dong_energy_dk","Ørsted Wind Ops A/S",33,"Fredericia","2009",450,"31386428"],["scantruck","Scantruck A/S",28,"Vejle","1980",450,"20615628"],["brondby_if","Brøndby IF A/S",36,"Brøndby","1964",440,"83526528"],["flsmidth_bk","FLSmidth Dorr-Oliver Eimco A/S",15,"Copenhagen","1882",430,"58180912"],["interxion","Interxion Danmark ApS",22,"Copenhagen","2000",420,"26192228"],["frigodan","Frigodan A/S",17,"Randers","1960",420,"17070928"],["scan_pac","Scan Pac A/S",18,"Kolding","1968",410,"14285228"],["marine_harvest_dk","Mowi Denmark A/S",17,"Brande","2000",410,"24617228"],["brd_price_hotels","Cabinn Hotel A/S",21,"Copenhagen","1992",400,"14731428"],["engie_dk","ENGIE Denmark A/S",14,"Fredericia","2000",390,"25781428"],["dk_bank","Arbejdernes Landsbank A/S",1,"Copenhagen","1930",380,"38025228"],["lunar_bank","Lunar Bank A/S",1,"Aarhus","2015",380,"39064228"],["mjolner","Mjølner Informatics A/S",22,"Aarhus","1998",380,"20600228"],["matas","Matas A/S",34,"Allerød","1949",370,"27218428"],["grontmij","Sweco Danmark A/S",15,"Copenhagen","1929",360,"18100628"],["kj_ind","K.J. Industries A/S",18,"Vejle","1952",360,"13810228"],["kp_components","KP Components A/S",15,"Aalborg","1970",350,"15204628"],["novo_seeds","Novo Seeds A/S",3,"Copenhagen","2007",340,"32296528"],["kapacity","Kapacity A/S",25,"Copenhagen","2006",340,"29218428"],["iss_one_service","ISS One Service A/S",16,"Copenhagen","2010",330,"33682028"],["cbm","Codan Motor A/S",23,"Copenhagen","1997",330,"18869228"],["cbrain","cBrain A/S",22,"Copenhagen","2000",320,"21452228"],["osstem_dk","Osstem Implant Denmark A/S",26,"Copenhagen","2010",320,"33521228"],["scan_shipping","Scan Shipping A/S",35,"Frederikshavn","1940",310,"10148328"],["incentive","Incentive A/S",25,"Hellerup","2000",310,"26481828"],["nrl_group","NRL Group A/S",39,"Aarhus","1995",305,"20204928"],["batec","Batec Hydro A/S",33,"Aarhus","2008",305,"31024828"],["icopal","Icopal A/S",5,"Copenhagen","1876",300,"50793828"]];
+const COMPANIES = RAW.map(r => ({id:r[0],name:r[1],sector:SECTOR_NAMES[r[2]],hq:r[3],founded:r[4],rev:r[5],cvr:r[6]||""}));
+
+const CATS = [
+  {id:"work",  label:"Work Environment",      icon:"⚖", desc:"Employee rights, wages, safety"},
+  {id:"env",   label:"Environmental Impact",  icon:"🌿", desc:"Carbon footprint, waste, sustainability"},
+  {id:"human", label:"Human Rights",          icon:"✊", desc:"Supply chain ethics, equality"},
+  {id:"legal", label:"Legal Compliance",      icon:"§",  desc:"Regulatory adherence, governance"},
+  {id:"tax",   label:"Tax & Finance",         icon:"◈",  desc:"Tax transparency, fair contribution"},
+  {id:"social",label:"Social Responsibility", icon:"◉", desc:"Community investment, philanthropy"},
+];
+const GUIDE = [
+  {s:1,color:"#D94F4F",label:"Proven Violation",    desc:"Confirmed breach or worst in industry."},
+  {s:2,color:"#E07B3A",label:"Under Suspicion",     desc:"Ongoing investigations or serious allegations."},
+  {s:3,color:"#C9A84C",label:"Neutral",             desc:"No notable positive or negative record."},
+  {s:4,color:"#8BC45A",label:"Exceeds Standards",   desc:"Voluntarily goes beyond regulations."},
+  {s:5,color:"#4CAF82",label:"Industry Frontrunner",desc:"Standard-setter for the entire industry."},
+];
+
+// State
+let user = null;
+let userRatings = {};
+let ratings = {};
+let activeCo = null;
+let modalState = null;
+let modalStars = 0;
+let currentPage = 1;
+let currentSector = "All";
+let currentSearch = "";
+let currentSort = "revenue";
+const PG = 24;
+
+// Seed ratings
+function seedRatings() {
+  COMPANIES.forEach(c => {
+    ratings[c.id] = {};
+    CATS.forEach(cat => {
+      const base = 2.3 + Math.random() * 2.1;
+      ratings[c.id][cat.id] = {total: base * 30, count: 30};
+    });
+  });
+}
+seedRatings();
+
+function getOverall(cr) {
+  return CATS.map(c => cr[c.id].total / cr[c.id].count).reduce((a,b)=>a+b,0) / CATS.length;
+}
+function getGrade(s) {
+  if (s>=4.5) return {g:"A+",c:"#4CAF82"};
+  if (s>=4.0) return {g:"A", c:"#4CAF82"};
+  if (s>=3.5) return {g:"B+",c:"#8BC45A"};
+  if (s>=3.0) return {g:"B", c:"#C9A84C"};
+  if (s>=2.5) return {g:"C", c:"#E07B3A"};
+  if (s>=2.0) return {g:"D", c:"#D94F4F"};
+  return {g:"F", c:"#B02020"};
+}
+function sc(s) { return s>=4?"#4CAF82":s>=3?"#C9A84C":s>=2?"#E07B3A":"#D94F4F"; }
+function fmtRev(m) {
+  if (m>=100000) return (m/1000).toFixed(0)+" mia.";
+  if (m>=1000)   return (m/1000).toFixed(1)+" mia.";
+  return m+" mio.";
+}
+function starsHtml(val, interactive, size) {
+  const sz = size || 20;
+  let html = "";
+  for (let n=1; n<=5; n++) {
+    const filled = n <= val;
+    html += `<svg class="${interactive?"star":""}" data-n="${n}" width="${sz}" height="${sz}" viewBox="0 0 24 24" style="cursor:${interactive?"pointer":"default"}">
+      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
+        fill="${filled?"#C9A84C":"none"}" stroke="${filled?"#C9A84C":"#2a3a5e"}" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>`;
+  }
+  return html;
+}
+
+function showView(name) {
+  ["home","company","auth"].forEach(v => {
+    document.getElementById("view-"+v).style.display = "none";
+  });
+  document.getElementById("view-"+name).style.display = "block";
+}
+
+function showHome() {
+  showView("home");
+  renderAll();
+}
+
+function showAuth(mode) {
+  showView("auth");
+  const isLogin = mode === "login";
+  document.getElementById("auth-title").textContent = isLogin ? "Welcome Back" : "Join Ethicate";
+  document.getElementById("auth-sub").textContent = isLogin ? "Sign in to rate companies" : "Free forever. Your voice, amplified.";
+  document.getElementById("auth-name").style.display = isLogin ? "none" : "block";
+  document.getElementById("auth-submit-btn").textContent = isLogin ? "Sign In" : "Create Account";
+  document.getElementById("auth-submit-btn").onclick = () => doAuth(isLogin);
+  document.getElementById("auth-switch").innerHTML = isLogin
+    ? `No account? <span style="color:#C9A84C;cursor:pointer" onclick="showAuth('register')">Join free</span>`
+    : `Have an account? <span style="color:#C9A84C;cursor:pointer" onclick="showAuth('login')">Sign in</span>`;
+}
+
+function doAuth(isLogin) {
+  const email = document.getElementById("auth-email").value;
+  const pw = document.getElementById("auth-pw").value;
+  const name = document.getElementById("auth-name").value;
+  if (!email || !pw) return;
+  if (!isLogin && !name) return;
+  user = {name: isLogin ? email.split("@")[0] : name, email};
+  updateNav();
+  showToast(isLogin ? "Welcome back." : "Welcome to Ethicate.");
+  if (activeCo) showCompany(activeCo);
+  else showHome();
+}
+
+function updateNav() {
+  const nav = document.getElementById("nav-right");
+  if (user) {
+    nav.innerHTML = `<span style="font-size:13px;color:#C9A84C">◆ ${user.name}</span>
+      <span style="font-size:11px;color:#5a6a8a;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="signOut()">Sign out</span>`;
+  } else {
+    nav.innerHTML = `<span style="font-size:11px;color:#5a6a8a;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showAuth('login')">Sign in</span>
+      <button class="gold-btn" onclick="showAuth('register')">Join Free</button>`;
+  }
+}
+
+function signOut() { user = null; updateNav(); }
+
+function showCompany(co) {
+  activeCo = co;
+  showView("company");
+  const cr = ratings[co.id];
+  const ov = getOverall(cr);
+  const col = sc(ov);
+  let html = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px">
+      <button class="ghost-btn" style="padding:6px 14px;font-size:11px" onclick="showHome()">← All Companies</button>
+    </div>
+    <p style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:8px">${co.sector}</p>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:28px;flex-wrap:wrap">
+      <div>
+        <h1 class="serif" style="font-size:clamp(22px,4vw,40px);font-weight:300;line-height:1.2;margin-bottom:14px">${co.name}</h1>
+        <div style="display:flex;gap:18px;flex-wrap:wrap">
+          ${[["HQ",co.hq],["Founded",co.founded],["Revenue",fmtRev(co.rev)+" DKK"],...(co.cvr?[["CVR",co.cvr]]:[])].map(([k,v])=>`
+          <div><div style="font-size:9px;letter-spacing:2px;color:#3a4a6b;text-transform:uppercase;margin-bottom:2px">${k}</div>
+          <div style="font-size:13px;color:#8a9ab0">${v}</div></div>`).join("")}
+        </div>
+      </div>
+      <div style="text-align:center;flex-shrink:0">
+        <div class="serif" style="font-size:48px;font-weight:700;color:${col};line-height:1">${ov.toFixed(1)}</div>
+        <div style="font-size:9px;letter-spacing:2px;color:#3a4a6b;text-transform:uppercase">out of 5</div>
+      </div>
+    </div>
+    <div style="height:1px;background:linear-gradient(90deg,transparent,#1e2e4a,transparent);margin-bottom:22px"></div>
+    <div style="background:#0c1525;border:1px solid #1a2744;border-radius:4px;padding:14px 18px;margin-bottom:18px">
+      <p style="font-size:9px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:8px">Rating Guide</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        ${GUIDE.map(g=>`<div style="display:flex;align-items:center;gap:6px">
+          <div style="display:flex;gap:2px">${[1,2,3,4,5].map(i=>`<svg width="10" height="10" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${i<=g.s?g.color:"none"}" stroke="${i<=g.s?g.color:"#2a3a5e"}" stroke-width="1.5"/></svg>`).join("")}</div>
+          <span style="font-size:10px;color:${g.color}">${g.label}</span>
+        </div>`).join("")}
+      </div>
+    </div>`;
+
+  if (!user) {
+    html += `<div style="background:#111b30;border:1px solid #1e2e4a;border-left:3px solid #C9A84C;padding:14px 18px;border-radius:3px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+      <p style="font-size:13px;color:#c0c8de">Sign in to rate this company.</p>
+      <div style="display:flex;gap:8px">
+        <button class="ghost-btn" style="padding:6px 12px;font-size:11px" onclick="showAuth('login')">Sign In</button>
+        <button class="gold-btn" style="padding:6px 12px" onclick="showAuth('register')">Join Free</button>
+      </div>
+    </div>`;
+  }
+
+  CATS.forEach(cat => {
+    const r = cr[cat.id];
+    const s = r.total / r.count;
+    const pct = ((s-1)/4)*100;
+    const col2 = sc(s);
+    const key = co.id + "_" + cat.id;
+    const ur = userRatings[key];
+    html += `<div style="background:#0c1525;border:1px solid #1a2744;border-radius:3px;padding:15px 17px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:16px">${cat.icon}</span>
+          <span style="font-size:13px;font-weight:500;color:#c0c8de">${cat.label}</span>
+          ${ur ? `<span style="font-size:10px;color:#C9A84C;background:#C9A84C12;padding:2px 6px;border-radius:2px">YOU: ${ur.score}/5</span>` : ""}
+        </div>
+        <button onclick="openModal('${co.id}','${cat.id}')" style="background:${ur?"#C9A84C12":"#1a2744"};border:${ur?"1px solid #C9A84C33":"1px solid #253555"};border-radius:2px;padding:5px 12px;font-size:10px;color:${ur?"#C9A84C":"#6a7a9a"};cursor:pointer;letter-spacing:1px;text-transform:uppercase;font-family:'DM Sans',sans-serif">
+          ${ur ? "✓ Update" : "Rate"}
+        </button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="mini-bar" style="flex:1"><div style="height:100%;border-radius:2px;background:${col2};width:${pct}%;transition:width .6s"></div></div>
+        <span style="font-size:13px;color:${col2};font-weight:600;min-width:28px">${s.toFixed(1)}</span>
+        <span style="font-size:10px;color:#2a3a5e;min-width:60px">${r.count} ratings</span>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById("company-content").innerHTML = html;
+}
+
+function openModal(coId, catId) {
+  if (!user) { showAuth("login"); return; }
+  const co = COMPANIES.find(c => c.id === coId);
+  const cat = CATS.find(c => c.id === catId);
+  modalState = {co, cat};
+  modalStars = 0;
+  const key = coId + "_" + catId;
+  const existing = userRatings[key];
+  if (existing) modalStars = existing.score;
+
+  document.getElementById("m-company").textContent = co.name;
+  document.getElementById("m-cat").textContent = cat.icon + " " + cat.label;
+  document.getElementById("m-url").value = existing ? (existing.url || "") : "";
+
+  // Guide
+  document.getElementById("m-guide").innerHTML = GUIDE.map(g =>
+    `<div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;gap:2px">${[1,2,3,4,5].map(i=>`<svg width="10" height="10" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${i<=g.s?g.color:"none"}" stroke="${i<=g.s?g.color:"#2a3a5e"}" stroke-width="1.5"/></svg>`).join("")}</div>
+      <span style="font-size:11px;color:${g.color};font-weight:600;min-width:130px">${g.label}</span>
+      <span style="font-size:11px;color:#4a5a7a">${g.desc}</span>
+    </div>`
+  ).join("");
+
+  renderModalStars();
+  document.getElementById("modal").style.display = "flex";
+}
+
+function renderModalStars() {
+  const container = document.getElementById("m-stars");
+  container.innerHTML = "";
+  for (let n = 1; n <= 5; n++) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("width","28"); svg.setAttribute("height","28"); svg.setAttribute("viewBox","0 0 24 24");
+    svg.style.cursor = "pointer";
+    const poly = document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    poly.setAttribute("points","12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26");
+    poly.setAttribute("fill", n <= modalStars ? "#C9A84C" : "none");
+    poly.setAttribute("stroke", n <= modalStars ? "#C9A84C" : "#2a3a5e");
+    poly.setAttribute("stroke-width","1.5");
+    svg.appendChild(poly);
+    svg.addEventListener("click", () => { modalStars = n; renderModalStars(); });
+    svg.addEventListener("mouseenter", () => {
+      container.querySelectorAll("polygon").forEach((p,i) => {
+        p.setAttribute("fill", i < n ? "#C9A84C" : "none");
+        p.setAttribute("stroke", i < n ? "#C9A84C" : "#2a3a5e");
+      });
+    });
+    svg.addEventListener("mouseleave", () => renderModalStars());
+    container.appendChild(svg);
+  }
+  const label = document.getElementById("m-label");
+  if (modalStars > 0) {
+    const g = GUIDE[modalStars - 1];
+    label.textContent = g.label + " (" + modalStars + "/5)";
+    label.style.color = g.color;
+  } else {
+    label.textContent = "";
+  }
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+  modalState = null;
+}
+
+function submitRating() {
+  if (!modalStars || !modalState) return;
+  const {co, cat} = modalState;
+  const key = co.id + "_" + cat.id;
+  const prev = userRatings[key];
+  const old = ratings[co.id][cat.id];
+  ratings[co.id][cat.id] = {
+    total: prev ? old.total - prev.score + modalStars : old.total + modalStars,
+    count: prev ? old.count : old.count + 1
+  };
+  userRatings[key] = {score: modalStars, url: document.getElementById("m-url").value};
+  closeModal();
+  showToast("Rating submitted — thank you!");
+  showCompany(co);
+}
+
+function showToast(msg) {
+  const old = document.getElementById("toast-el");
+  if (old) old.remove();
+  const el = document.createElement("div");
+  el.id = "toast-el";
+  el.className = "toast-el";
+  el.textContent = "✦ " + msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// Home grid
+function getFiltered() {
+  let list = COMPANIES.filter(c =>
+    (currentSector === "All" || c.sector === currentSector) &&
+    (c.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+     c.hq.toLowerCase().includes(currentSearch.toLowerCase()) ||
+     c.sector.toLowerCase().includes(currentSearch.toLowerCase()) ||
+     (c.cvr && c.cvr.includes(currentSearch)))
+  );
+  if (currentSort === "revenue") list.sort((a,b) => b.rev - a.rev);
+  else if (currentSort === "name") list.sort((a,b) => a.name.localeCompare(b.name));
+  else list.sort((a,b) => getOverall(ratings[b.id]) - getOverall(ratings[a.id]));
+  return list;
+}
+
+function renderGrid() {
+  const filtered = getFiltered();
+  const totalPages = Math.ceil(filtered.length / PG);
+  if (currentPage > totalPages) currentPage = 1;
+  const items = filtered.slice((currentPage-1)*PG, currentPage*PG);
+
+  document.getElementById("count-label").textContent =
+    ((currentPage-1)*PG+1) + "–" + Math.min(currentPage*PG, filtered.length) + " of " + filtered.length + " companies";
+
+  const grid = document.getElementById("grid");
+  grid.innerHTML = items.map(co => {
+    const cr = ratings[co.id];
+    const ov = getOverall(cr);
+    const {g, c} = getGrade(ov);
+    const catBars = CATS.map(cat => {
+      const s = cr[cat.id].total / cr[cat.id].count;
+      return `<div title="${cat.label}">
+        <div style="font-size:8px;color:#2a3a4a;margin-bottom:2px;text-transform:uppercase">${cat.label[0]}</div>
+        <div class="mini-bar"><div style="height:100%;border-radius:2px;background:${sc(s)};width:${((s-1)/4)*100}%"></div></div>
+      </div>`;
+    }).join("");
+    return `<div class="card" onclick="showCompany(COMPANIES.find(x=>x.id==='${co.id}'))">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div style="flex:1;min-width:0;padding-right:8px">
+          <div class="serif" style="font-size:15px;font-weight:600;line-height:1.3;margin-bottom:2px">${co.name}</div>
+          <div style="font-size:10px;color:#5a6a8a">${co.sector}</div>
+        </div>
+        <div style="width:34px;height:34px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;background:${c}1a;border:1px solid ${c}33;color:${c}">${g}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+        ${starsHtml(Math.round(ov), false, 13)}
+        <span style="font-size:12px;color:#C9A84C;font-weight:600">${ov.toFixed(2)}</span>
+        <span style="font-size:10px;color:#2a3a5a;margin-left:auto">${co.hq}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:10px;color:#2a3a5a">${fmtRev(co.rev)} DKK</span>
+        <span style="font-size:10px;color:#2a3a5a">Est. ${co.founded}</span>
+      </div>
+      ${co.cvr ? `<div style="margin-bottom:7px;display:flex;align-items:center;gap:4px"><span style="font-size:9px;letter-spacing:1.5px;color:#2a3a4a;text-transform:uppercase">CVR</span><span style="font-size:10px;color:#4a5a7a;letter-spacing:0.5px">${co.cvr}</span></div>` : ""}
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:3px">${catBars}</div>
+    </div>`;
+  }).join("");
+
+  // Pagination
+  const pg = document.getElementById("pagination");
+  if (totalPages <= 1) { pg.innerHTML = ""; return; }
+  let pgHtml = `<button class="pg" onclick="changePage(${currentPage-1})" ${currentPage===1?"disabled":""}>←</button>`;
+  const maxBtns = 9;
+  let start = Math.max(1, Math.min(currentPage - 4, totalPages - maxBtns + 1));
+  let end = Math.min(totalPages, start + maxBtns - 1);
+  for (let p = start; p <= end; p++) {
+    pgHtml += `<button class="pg ${p===currentPage?"active":""}" onclick="changePage(${p})">${p}</button>`;
+  }
+  pgHtml += `<button class="pg" onclick="changePage(${currentPage+1})" ${currentPage===totalPages?"disabled":""}>→</button>`;
+  pg.innerHTML = pgHtml;
+}
+
+function renderSectors() {
+  const sectors = ["All", ...SECTOR_NAMES];
+  document.getElementById("sector-btns").innerHTML = sectors.map(s =>
+    `<button class="sec-btn ${s===currentSector?"active":""}" onclick="setSector('${s.replace(/'/g,"\'")}')">${s}</button>`
+  ).join("");
+}
+
+function renderGuide() {
+  document.getElementById("guide-row").innerHTML = GUIDE.map(g =>
+    `<div style="display:flex;align-items:center;gap:6px">
+      <div style="display:flex;gap:2px">${[1,2,3,4,5].map(i=>`<svg width="11" height="11" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${i<=g.s?g.color:"none"}" stroke="${i<=g.s?g.color:"#2a3a5e"}" stroke-width="1.5"/></svg>`).join("")}</div>
+      <span style="font-size:11px;color:${g.color};font-weight:500">${g.label}</span>
+    </div>`
+  ).join("");
+}
+
+function renderAll() { renderSectors(); renderGrid(); }
+function setSector(s) { currentSector = s; currentPage = 1; renderAll(); }
+function changePage(p) { currentPage = p; renderGrid(); window.scrollTo(0,0); }
+function sortChanged() { currentSort = document.getElementById("sort-sel").value; currentPage = 1; renderGrid(); }
+function searchChanged() { currentSearch = document.getElementById("search-inp").value; currentPage = 1; renderGrid(); }
+
+// Init
+renderGuide();
+showHome();
+</script>
+</body>
+</html>
