@@ -118,7 +118,7 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
     <!-- Stats -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1a2744;border-radius:4px;overflow:hidden;margin-bottom:36px">
       <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">293</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Companies</div></div>
-      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">6</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Categories</div></div>
+      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">8</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Categories</div></div>
       <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">42</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Sectors</div></div>
       <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">Free</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">To Use</div></div>
     </div>
@@ -250,6 +250,10 @@ const CATS = [
    tooltip:"Examines whether the company pays a fair share of taxes and operates with financial transparency — including use of tax havens, aggressive tax planning, transfer pricing, and willingness to disclose financial data. Considers both legality and moral responsibility. A high score means the company contributes fairly to the societies it operates in; a low score means it systematically minimises its tax burden at the expense of public services."},
   {id:"social",label:"Social Responsibility", icon:"◉", desc:"Community investment, philanthropy",
    tooltip:"Measures the company's positive contribution to society beyond its core business — including community investment, charitable giving, support for education and culture, responsible marketing, and how it handles crises affecting the public. A high score means the company actively gives back and behaves as a responsible corporate citizen; a low score means it prioritises profit with little regard for broader societal impact."},
+  {id:"animal",label:"Animal Welfare", icon:"🐾", desc:"Treatment of animals in operations and supply chain",
+   tooltip:"Evaluates how the company treats animals under its direct control or within its supply chain — including livestock conditions, use of animal testing, sourcing from certified welfare schemes, and compliance with Danish and EU animal welfare law. Particularly relevant for food, agriculture, pharmaceutical, and cosmetics companies. A high score means welfare is a genuine priority with verified standards; a low score means documented cruelty, negligence, or systematic disregard for animal suffering."},
+  {id:"privacy",label:"Data Privacy", icon:"🔒", desc:"GDPR compliance, data handling, cybersecurity",
+   tooltip:"Assesses how responsibly the company collects, stores, and uses personal data — including GDPR compliance, history of data breaches, cooperation with Datatilsynet, cybersecurity investment, and transparency about what data is collected and why. A high score means the company treats data protection as a core obligation with verified practices; a low score means fines, breaches, or a pattern of misusing personal information."},
 ];
 const GUIDE = [
   {s:5,color:"#4CAF82",label:"Industry Frontrunner",desc:"Standard-setter for the entire industry."},
@@ -577,31 +581,63 @@ function openModal(co, cat) {
   document.getElementById("m-url").value = ur ? (ur.url || "") : "";
   const catExamples = {
     work: {
-      low:  "Documented violations of labour law, wage theft, union suppression, or serious workplace safety incidents resulting in injury or death.",
-      high: "Consistently rated among Denmark's best workplaces, with above-market wages, strong union cooperation, transparent pay structures, and zero serious safety incidents."
+      s5: "Consistently rated among Denmark's best workplaces, with above-market wages, strong union cooperation, transparent pay structures, and zero serious safety incidents.",
+      s4: "Above-average employee satisfaction scores, proactive health and safety programmes, and transparent wage reporting beyond what is legally required.",
+      s3: "No notable positive or negative record. Meets legal requirements but offers little beyond minimum obligations to employees.",
+      s2: "Credible allegations of poor working conditions, below-market wages, high staff turnover, or unresolved employee grievances under investigation.",
+      s1: "Documented violations of labour law, wage theft, union suppression, or serious workplace safety incidents resulting in injury or death."
     },
     env: {
-      low:  "Confirmed environmental violations, illegal dumping, excessive emissions breaching legal limits, or no climate reporting whatsoever.",
-      high: "Science-based emissions targets, verified third-party sustainability reporting, net-zero commitments with a credible roadmap, and measurable year-on-year progress."
+      s5: "Science-based emissions targets, verified third-party sustainability reporting, net-zero commitments with a credible roadmap, and measurable year-on-year progress.",
+      s4: "Published emissions reduction roadmap with measurable annual progress, third-party verified sustainability report, and active waste reduction initiatives.",
+      s3: "Meets legal environmental requirements. Basic sustainability reporting in place but no ambitious targets or third-party verification.",
+      s2: "No active violations but limited transparency, missing emissions targets, or known environmental impact with no credible reduction plan.",
+      s1: "Confirmed environmental violations, illegal dumping, excessive emissions breaching legal limits, or no climate reporting whatsoever."
     },
     human: {
-      low:  "Verified use of forced or child labour in the supply chain, or systematic discrimination against employees or contractors.",
-      high: "Full supply chain transparency, third-party audits of all tier-1 and tier-2 suppliers, and a public human rights policy with named accountability."
+      s5: "Full supply chain transparency, third-party audits of all tier-1 and tier-2 suppliers, and a public human rights policy with named accountability.",
+      s4: "Regular supplier audits, a public human rights policy, and documented corrective action when issues are found in the supply chain.",
+      s3: "Basic code of conduct for suppliers exists but limited auditing. No major incidents on record but human rights due diligence is minimal.",
+      s2: "Credible allegations of supply chain abuses, discrimination complaints, or known sourcing from high-risk regions with no mitigation measures.",
+      s1: "Verified use of forced or child labour in the supply chain, or systematic discrimination against employees or contractors."
     },
     legal: {
-      low:  "Active criminal investigations, regulatory fines, or confirmed violations of Danish or EU law within the past three years.",
-      high: "Clean regulatory record, proactive compliance culture, publicly available governance reports, and no material legal disputes."
+      s5: "Clean regulatory record across all jurisdictions, publicly available governance reports, and recognised internally for compliance leadership.",
+      s4: "Proactive compliance culture with internal audits, transparent governance reporting, and no material legal disputes in recent years.",
+      s3: "Clean recent record with no known violations. Standard governance structures in place with no notable incidents.",
+      s2: "Past regulatory sanctions or ongoing disputes with authorities. No criminal proceedings but a pattern of non-compliance.",
+      s1: "Active criminal investigations, regulatory fines, or confirmed violations of Danish or EU law within the past three years."
     },
     tax: {
-      low:  "Use of tax havens, profit shifting to low-tax jurisdictions, or investigations by SKAT or EU authorities for tax avoidance.",
-      high: "Full public country-by-country tax reporting, effective tax rate aligned with Danish corporate rates, and no offshore structures without clear business purpose."
+      s5: "Full public country-by-country tax reporting, effective tax rate aligned with Danish corporate rates, and no offshore structures without clear business purpose.",
+      s4: "Publishes a clear tax strategy, effective tax rate close to the Danish statutory rate, and no structures whose primary purpose is tax reduction.",
+      s3: "Pays tax in line with legal requirements. No major controversies but limited voluntary transparency on tax strategy or country-by-country payments.",
+      s2: "Complex offshore structures that are legal but lack clear business purpose, or an effective tax rate significantly below Danish corporate norms.",
+      s1: "Use of tax havens, profit shifting to low-tax jurisdictions, or investigations by SKAT or EU authorities for tax avoidance."
     },
     social: {
-      low:  "No community investment, history of lobbying against social or environmental legislation, or involvement in scandals harming local communities.",
-      high: "Verified community programmes, partnerships with Danish NGOs or educational institutions, measurable social impact reporting, and active stakeholder dialogue."
+      s5: "Verified community programmes, partnerships with Danish NGOs or educational institutions, measurable social impact reporting, and active stakeholder dialogue.",
+      s4: "Dedicated social responsibility programmes with defined goals, community partnerships, and annual reporting on outcomes.",
+      s3: "Occasional charitable contributions or sponsorships but no structured social responsibility strategy or measurable community impact.",
+      s2: "Minimal community engagement, no measurable social programmes, or a track record of prioritising shareholder returns over local stakeholder interests.",
+      s1: "No community investment, history of lobbying against social or environmental legislation, or involvement in scandals harming local communities."
+    },
+    animal: {
+      s5: "Industry-leading animal welfare standards with full third-party certification, public welfare reporting, active research investment, and a credible roadmap to eliminate practices that cause unnecessary suffering.",
+      s4: "Exceeds legal requirements through reduced stocking densities, enriched environments, and participation in voluntary welfare certification schemes such as Dyrevelfaerdsmærket.",
+      s3: "Meets Danish legal minimum standards for animal welfare. No major violations on record but no voluntary initiatives beyond what is legally required.",
+      s2: "Known welfare concerns such as overcrowding, routine use of painkillers to mask poor conditions, or repeated inspection failures without meaningful corrective action.",
+      s1: "Confirmed cases of systematic animal cruelty, illegal conditions, or major violations of Danish or EU animal welfare regulations resulting in sanctions."
+    },
+    privacy: {
+      s5: "Privacy-by-design embedded across all products and operations, independently verified security practices, full transparency about data use, and a track record of proactively notifying users of any risks.",
+      s4: "Publishes a clear and readable privacy policy, minimal data collection approach, regular third-party security audits, and a documented breach response plan.",
+      s3: "Meets GDPR obligations. No known violations but limited transparency about data use, retention policies, or cybersecurity practices beyond what is legally required.",
+      s2: "Under investigation for data handling practices, known history of misusing personal data, or repeated security incidents without adequate response.",
+      s1: "Confirmed GDPR violations resulting in fines from Datatilsynet or EU authorities, or a major data breach caused by negligent security practices that exposed user data."
     }
   };
-  const ex = catExamples[modalState.cat.id] || {low:"", high:""};
+  const ex = catExamples[modalState.cat.id] || {s1:"",s2:"",s3:"",s4:"",s5:""};
   document.getElementById("m-guide").innerHTML = `
     <div style="margin-bottom:10px">
       <div style="font-size:9px;letter-spacing:2px;color:#3a4a6b;text-transform:uppercase;margin-bottom:6px">What each star means</div>
@@ -789,7 +825,7 @@ function renderGrid() {
         <span style="font-size:10px;color:#2a3a5a">Est. ${co.founded}</span>
       </div>
       ${co.cvr ? `<div style="margin-bottom:7px;display:flex;align-items:center;gap:4px"><span style="font-size:9px;letter-spacing:1.5px;color:#2a3a4a;text-transform:uppercase">CVR</span><span style="font-size:10px;color:#4a5a7a;letter-spacing:0.5px">${co.cvr}</span></div>` : ""}
-      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:3px">${catBars}</div>
+      <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px">${catBars}</div>
     </div>`;
   }).join("");
 
