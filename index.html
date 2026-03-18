@@ -28,6 +28,39 @@ nav{border-bottom:1px solid #1a2744;padding:0 32px;height:56px;display:flex;alig
 .pg:hover{color:#9aaabf;border-color:#2a3a5e}
 .pg.active{background:#C9A84C1a;border-color:#C9A84C55;color:#C9A84C}
 .pg:disabled{opacity:.3;cursor:default}
+.tooltip-wrap{position:relative;display:inline-block}
+.tooltip-box{visibility:hidden;opacity:0;position:absolute;z-index:100;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#0c1525;border:1px solid #C9A84C44;border-radius:3px;padding:10px 14px;width:280px;font-size:11px;color:#8a9ab0;line-height:1.6;pointer-events:none;transition:opacity .2s;white-space:normal}
+.tooltip-box::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#C9A84C44}
+.tooltip-wrap:hover .tooltip-box{visibility:visible;opacity:1}
+.tooltip-wrap{position:relative;display:inline-block}
+.tooltip-box{
+  display:none;position:absolute;z-index:100;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#0e1928;border:1px solid #C9A84C44;border-radius:4px;padding:12px 14px;
+  width:260px;font-size:12px;color:#8a9ab0;line-height:1.7;pointer-events:none;
+  box-shadow:0 8px 32px #000a;
+}
+.tooltip-box::after{
+  content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#C9A84C44;
+}
+.tooltip-wrap:hover .tooltip-box{display:block}
+.tooltip-wrap{position:relative;display:inline-block}
+.tooltip-box{
+  visibility:hidden;opacity:0;
+  position:absolute;z-index:100;
+  bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#0c1525;border:1px solid #C9A84C33;border-radius:4px;
+  padding:12px 14px;width:280px;
+  font-size:11px;color:#8a9ab0;line-height:1.7;
+  pointer-events:none;
+  transition:opacity .2s ease;
+  box-shadow:0 8px 24px #000a;
+}
+.tooltip-box::after{
+  content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#C9A84C33;
+}
+.tooltip-wrap:hover .tooltip-box{visibility:visible;opacity:1}
 .ipt{width:100%;background:#0c1525;border:1px solid #1e2e4a;border-radius:2px;padding:10px 12px;color:#e8eaf2;font-family:'DM Sans',sans-serif;font-size:13px;outline:none}
 .mini-bar{height:4px;background:#1a2744;border-radius:2px;overflow:hidden}
 .toast-el{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111b30;border:1px solid #C9A84C44;border-left:3px solid #C9A84C;padding:11px 22px;border-radius:2px;font-size:13px;color:#e8eaf2;z-index:300;white-space:nowrap;animation:fadeup .3s ease}
@@ -38,6 +71,23 @@ nav{border-bottom:1px solid #1a2744;padding:0 32px;height:56px;display:flex;alig
 .star svg:hover{transform:scale(1.25)}
 #view-home,#view-company,#view-auth{display:none}
 footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:40px}
+.tooltip-wrap{position:relative;display:inline-block}
+.tooltip-wrap .tooltip-box{
+  visibility:hidden;opacity:0;
+  position:absolute;z-index:100;
+  bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#0c1525;border:1px solid #C9A84C33;border-left:2px solid #C9A84C;
+  color:#9aaabf;font-size:12px;line-height:1.7;
+  padding:12px 14px;border-radius:3px;
+  width:300px;pointer-events:none;
+  transition:opacity .2s ease;
+  font-family:'DM Sans',sans-serif;font-weight:300;
+}
+.tooltip-wrap:hover .tooltip-box{visibility:visible;opacity:1}
+.tooltip-wrap .tooltip-box::after{
+  content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#C9A84C33;
+}
 </style>
 </head>
 <body>
@@ -132,11 +182,35 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
   </div>
 </div>
 
+<!-- Flag / Evidence Modal -->
+<div id="flag-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeFlagModal()">
+  <div class="modal-box">
+    <button onclick="closeFlagModal()" style="position:absolute;top:10px;right:14px;background:none;border:none;color:#3a4a6b;font-size:20px;cursor:pointer">×</button>
+    <p id="fm-company" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:4px"></p>
+    <h2 class="serif" id="fm-cat" style="font-size:20px;font-weight:400;margin-bottom:6px"></h2>
+    <p style="font-size:12px;color:#5a6a8a;line-height:1.7;margin-bottom:16px">Submit evidence of a proven violation or outstanding industry leadership. Your submission will be reviewed before it affects the rating. Violations within the last 15 years are eligible.</p>
+    <p style="font-size:10px;letter-spacing:2px;color:#6a7a9a;text-transform:uppercase;margin-bottom:8px">Type of evidence</p>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button id="fm-violation-btn" onclick="selectFlagType('violation')" style="flex:1;padding:10px;border-radius:2px;border:1px solid #D94F4F44;background:#D94F4F0d;color:#D94F4F;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif">⚠ Proven Violation</button>
+      <button id="fm-frontrunner-btn" onclick="selectFlagType('frontrunner')" style="flex:1;padding:10px;border-radius:2px;border:1px solid #4CAF8244;background:#4CAF820d;color:#4CAF82;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif">★ Industry Frontrunner</button>
+    </div>
+    <p style="font-size:10px;letter-spacing:2px;color:#6a7a9a;text-transform:uppercase;margin-bottom:6px">Source URL <span style="color:#2a3a5e;letter-spacing:0;text-transform:none">— required</span></p>
+    <input class="ipt" id="fm-url" placeholder="https://example.com/article" style="margin-bottom:12px"/>
+    <p style="font-size:10px;letter-spacing:2px;color:#6a7a9a;text-transform:uppercase;margin-bottom:6px">Explanation <span style="color:#2a3a5e;letter-spacing:0;text-transform:none">— briefly describe what the source proves</span></p>
+    <textarea class="ipt" id="fm-explanation" placeholder="e.g. Court ruling from 2021 confirming wage theft affecting 340 employees..." style="height:80px;resize:vertical;margin-bottom:16px"></textarea>
+    <div style="background:#0c1525;border:1px solid #1a2744;border-radius:3px;padding:10px 14px;margin-bottom:16px">
+      <p style="font-size:10px;color:#3a4a6b;line-height:1.6">Your submission will be reviewed by the Ethicate admin before it locks the rating. You will not be notified of the outcome, but approved evidence will appear publicly on the company page.</p>
+    </div>
+    <button class="gold-btn" id="fm-submit" style="width:100%;padding:12px" onclick="submitFlag()">Submit Evidence for Review</button>
+  </div>
+</div>
+
 <div id="modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal()">
   <div class="modal-box">
     <button onclick="closeModal()" style="position:absolute;top:10px;right:14px;background:none;border:none;color:#3a4a6b;font-size:20px;cursor:pointer">×</button>
     <p id="m-company" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:4px"></p>
-    <h2 class="serif" id="m-cat" style="font-size:22px;font-weight:400;margin-bottom:14px"></h2>
+    <h2 class="serif" id="m-cat" style="font-size:22px;font-weight:400;margin-bottom:6px"></h2>
+    <p id="m-cat-detail" style="font-size:12px;color:#5a6a8a;line-height:1.7;margin-bottom:14px"></p>
     <div style="background:#0c1525;border:1px solid #1a2744;border-radius:3px;padding:10px 14px;margin-bottom:16px">
       <p style="font-size:9px;letter-spacing:2px;color:#3a4a6b;text-transform:uppercase;margin-bottom:8px">What each star means</p>
       <div id="m-guide" style="display:flex;flex-direction:column;gap:5px"></div>
@@ -164,12 +238,18 @@ const RAW = [["ap_moller_holding","A.P. Møller Holding A/S",12,"Copenhagen","20
 const COMPANIES = RAW.map(r => ({id:r[0],name:r[1],sector:SECTOR_NAMES[r[2]],hq:r[3],founded:r[4],rev:r[5],cvr:r[6]||""}));
 
 const CATS = [
-  {id:"work",  label:"Work Environment",      icon:"⚖", desc:"Employee rights, wages, safety"},
-  {id:"env",   label:"Environmental Impact",  icon:"🌿", desc:"Carbon footprint, waste, sustainability"},
-  {id:"human", label:"Human Rights",          icon:"✊", desc:"Supply chain ethics, equality"},
-  {id:"legal", label:"Legal Compliance",      icon:"§",  desc:"Regulatory adherence, governance"},
-  {id:"tax",   label:"Tax & Finance",         icon:"◈",  desc:"Tax transparency, fair contribution"},
-  {id:"social",label:"Social Responsibility", icon:"◉", desc:"Community investment, philanthropy"},
+  {id:"work",  label:"Work Environment",      icon:"⚖", desc:"Employee rights, wages, safety",
+   tooltip:"Covers how the company treats its employees — including fair wages, working hours, workplace safety, union rights, whistleblower protections, and whether it has faced strikes, scandals, or labour violations. A high score means employees are well treated and protected; a low score indicates exploitation, unsafe conditions, or suppression of worker rights."},
+  {id:"env",   label:"Environmental Impact",  icon:"🌿", desc:"Carbon footprint, waste, sustainability",
+   tooltip:"Evaluates the company's impact on the natural environment — including CO₂ emissions, waste management, water usage, pollution, use of renewable energy, and sustainability reporting. Considers both direct operations and supply chain impact. A high score means the company is actively reducing its footprint; a low score means it causes significant environmental harm with little accountability."},
+  {id:"human", label:"Human Rights",          icon:"✊", desc:"Supply chain ethics, equality",
+   tooltip:"Assesses whether the company respects human rights across its entire value chain — including its own workforce, suppliers, and business partners. Covers issues like child labour, forced labour, discrimination, gender equality, and sourcing from conflict regions. A high score means the company actively audits and enforces ethical standards; a low score indicates documented abuses or wilful ignorance of supply chain conditions."},
+  {id:"legal", label:"Legal Compliance",      icon:"§",  desc:"Regulatory adherence, governance",
+   tooltip:"Looks at the company's track record with laws, regulations, and corporate governance standards — including fines, sanctions, criminal investigations, data privacy breaches, anti-competitive behaviour, and board accountability. A high score means clean compliance and strong governance; a low score means repeated violations, regulatory battles, or weak internal controls."},
+  {id:"tax",   label:"Tax & Finance",         icon:"◈",  desc:"Tax transparency, fair contribution",
+   tooltip:"Examines whether the company pays a fair share of taxes and operates with financial transparency — including use of tax havens, aggressive tax planning, transfer pricing, and willingness to disclose financial data. Considers both legality and moral responsibility. A high score means the company contributes fairly to the societies it operates in; a low score means it systematically minimises its tax burden at the expense of public services."},
+  {id:"social",label:"Social Responsibility", icon:"◉", desc:"Community investment, philanthropy",
+   tooltip:"Measures the company's positive contribution to society beyond its core business — including community investment, charitable giving, support for education and culture, responsible marketing, and how it handles crises affecting the public. A high score means the company actively gives back and behaves as a responsible corporate citizen; a low score means it prioritises profit with little regard for broader societal impact."},
 ];
 const GUIDE = [
   {s:5,color:"#4CAF82",label:"Industry Frontrunner",desc:"Standard-setter for the entire industry."},
@@ -183,6 +263,8 @@ const GUIDE = [
 let user = null;
 let userRatings = {};   // key: companyId_catId → {score, source_url}
 let ratings = {};       // key: companyId → {catId: {total, count}}
+let approvedFlags = {}; // key: companyId_catId → flag_type ('violation'|'frontrunner')
+let lockedScores = {};  // set per company when viewing: catId → locked score
 let activeCo = null;
 let modalState = null;
 let modalStars = 0;
@@ -230,6 +312,22 @@ async function loadRatings() {
   renderGrid();
 }
 
+// ── Load approved flags ──────────────────────────────────────────
+async function loadFlags() {
+  const { data, error } = await sb.from("flags").select("company_id, category, flag_type").eq("approved", true);
+  if (error || !data) return;
+  approvedFlags = {};
+  data.forEach(row => {
+    const key = row.company_id + "_" + row.category;
+    // Violations always override frontrunner
+    if (row.flag_type === "violation") {
+      approvedFlags[key] = "violation";
+    } else if (!approvedFlags[key]) {
+      approvedFlags[key] = "frontrunner";
+    }
+  });
+}
+
 // ── Load current user's own ratings ──────────────────────────────
 async function loadUserRatings() {
   if (!user) return;
@@ -246,6 +344,16 @@ async function loadUserRatings() {
 // ── Helper functions ──────────────────────────────────────────────
 function getOverall(cr) {
   return CATS.map(c => cr[c.id].total / cr[c.id].count).reduce((a,b)=>a+b,0) / CATS.length;
+}
+function getCatScore(cr, catId) {
+  // Returns locked score if flag exists, otherwise raw average
+  const locked = lockedScores[catId] !== undefined ? lockedScores[catId] : null;
+  if (locked !== null) return locked;
+  return cr[catId].total / cr[catId].count;
+}
+function getOverallForCo(coId) {
+  const cr = ratings[coId];
+  return CATS.map(c => getCatScore(cr, c.id)).reduce((a,b)=>a+b,0) / CATS.length;
 }
 function getGrade(s) {
   if (s>=4.5) return {g:"A+",c:"#4CAF82"};
@@ -361,7 +469,14 @@ function showCompany(co) {
   activeCo = co;
   showView("company");
   const cr = ratings[co.id];
-  const ov = getOverall(cr);
+  // Build lockedScores for this company
+  lockedScores = {};
+  CATS.forEach(cat => {
+    const key = co.id + "_" + cat.id;
+    if (approvedFlags[key] === "violation") lockedScores[cat.id] = 1;
+    else if (approvedFlags[key] === "frontrunner") lockedScores[cat.id] = 5;
+  });
+  const ov = getOverallForCo(co.id);
   const {g, c: col} = getGrade(ov);
 
   document.getElementById("company-content").innerHTML = `
@@ -384,6 +499,34 @@ function showCompany(co) {
       </div>
     </div>
     <div style="height:1px;background:linear-gradient(90deg,transparent,#1e2e4a,transparent);margin-bottom:22px"></div>
+    ${(()=>{
+      const allUrls = CATS.flatMap(cat => sourceUrls[co.id+"_"+cat.id]||[]);
+      const uniqueUrls = [...new Set(allUrls)];
+      if (ov >= 4 && uniqueUrls.length > 0) {
+        return `<div style="background:#0c1525;border:1px solid #4CAF8233;border-radius:4px;padding:14px 18px;margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <div style="width:8px;height:8px;border-radius:50%;background:#4CAF82;flex-shrink:0"></div>
+            <p style="font-size:9px;letter-spacing:3px;color:#4CAF82;text-transform:uppercase">Why this company scores highly</p>
+          </div>
+          <p style="font-size:12px;color:#5a7a5a;line-height:1.7;margin-bottom:10px">This company has a combined rating of ${ov.toFixed(1)} out of 5. The following sources have been submitted by the community as evidence of strong performance:</p>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            ${uniqueUrls.map(u=>`<div style="display:flex;align-items:flex-start;gap:8px"><span style="color:#4CAF82;font-size:12px;flex-shrink:0">→</span><a href="${u}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#4CAF82;word-break:break-all;opacity:0.85">${u}</a></div>`).join("")}
+          </div>
+        </div>`;
+      } else if (ov <= 2 && uniqueUrls.length > 0) {
+        return `<div style="background:#0c1525;border:1px solid #D94F4F33;border-radius:4px;padding:14px 18px;margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <div style="width:8px;height:8px;border-radius:50%;background:#D94F4F;flex-shrink:0"></div>
+            <p style="font-size:9px;letter-spacing:3px;color:#D94F4F;text-transform:uppercase">Why this company scores poorly</p>
+          </div>
+          <p style="font-size:12px;color:#7a5a5a;line-height:1.7;margin-bottom:10px">This company has a combined rating of ${ov.toFixed(1)} out of 5. The following sources have been submitted by the community as evidence of concerning conduct:</p>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            ${uniqueUrls.map(u=>`<div style="display:flex;align-items:flex-start;gap:8px"><span style="color:#D94F4F;font-size:12px;flex-shrink:0">→</span><a href="${u}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#D94F4F;word-break:break-all;opacity:0.85">${u}</a></div>`).join("")}
+          </div>
+        </div>`;
+      }
+      return "";
+    })()}
     <div style="background:#0c1525;border:1px solid #1a2744;border-radius:4px;padding:14px 18px;margin-bottom:18px">
       <p style="font-size:9px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:8px">Rating Guide</p>
       <div style="display:flex;gap:14px;flex-wrap:wrap">
@@ -401,14 +544,17 @@ function showCompany(co) {
         return `<div class="card" style="cursor:default">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
             <div>
-              <span style="font-size:11px;letter-spacing:1px;color:#5a6a8a;text-transform:uppercase">${cat.icon} ${cat.label}</span>
+              <div class="tooltip-wrap">
+                <span style="font-size:11px;letter-spacing:1px;color:#5a6a8a;text-transform:uppercase;cursor:help;border-bottom:1px dotted #2a3a5a">${cat.icon} ${cat.label}</span>
+                <div class="tooltip-box">${cat.tooltip}</div>
+              </div>
               <div style="font-size:10px;color:#2a3a5a;margin-top:2px">${cat.desc}</div>
             </div>
             <div style="width:28px;height:28px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:${gc}1a;border:1px solid ${gc}33;color:${gc}">${grade}</div>
           </div>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
             ${starsHtml(Math.round(s), false, 14)}
-            <span style="font-size:13px;color:#C9A84C;font-weight:600">${s.toFixed(2)}</span>
+            <span style="font-size:13px;color:#C9A84C;font-weight:600">${Math.round(s)}</span>
             <span style="font-size:10px;color:#2a3a5a">${cr[cat.id].count} ratings</span>
           </div>
           ${ur ? `<div style="background:#C9A84C0d;border:1px solid #C9A84C22;border-radius:2px;padding:6px 10px;font-size:10px;color:#C9A84C;margin-bottom:8px">Your rating: ${ur.score} star${ur.score!==1?"s":""}</div>` : ""}
@@ -427,13 +573,59 @@ function openModal(co, cat) {
   modalStars = ur ? ur.score : 0;
   document.getElementById("m-company").textContent = co.name;
   document.getElementById("m-cat").textContent = cat.label;
+  document.getElementById("m-cat-detail").textContent = cat.detail;
   document.getElementById("m-url").value = ur ? (ur.url || "") : "";
-  document.getElementById("m-guide").innerHTML = GUIDE.map(g =>
-    `<div style="display:flex;align-items:center;gap:8px">
-      <div style="display:flex;gap:2px">${[1,2,3,4,5].map(i=>`<svg width="10" height="10" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${i<=g.s?g.color:"none"}" stroke="${i<=g.s?g.color:"#2a3a5e"}" stroke-width="1.5"/></svg>`).join("")}</div>
-      <span style="font-size:11px;color:${g.color}">${g.label} — <span style="color:#4a5a7a">${g.desc}</span></span>
-    </div>`
-  ).join("");
+  const catExamples = {
+    work: {
+      low:  "Documented violations of labour law, wage theft, union suppression, or serious workplace safety incidents resulting in injury or death.",
+      high: "Consistently rated among Denmark's best workplaces, with above-market wages, strong union cooperation, transparent pay structures, and zero serious safety incidents."
+    },
+    env: {
+      low:  "Confirmed environmental violations, illegal dumping, excessive emissions breaching legal limits, or no climate reporting whatsoever.",
+      high: "Science-based emissions targets, verified third-party sustainability reporting, net-zero commitments with a credible roadmap, and measurable year-on-year progress."
+    },
+    human: {
+      low:  "Verified use of forced or child labour in the supply chain, or systematic discrimination against employees or contractors.",
+      high: "Full supply chain transparency, third-party audits of all tier-1 and tier-2 suppliers, and a public human rights policy with named accountability."
+    },
+    legal: {
+      low:  "Active criminal investigations, regulatory fines, or confirmed violations of Danish or EU law within the past three years.",
+      high: "Clean regulatory record, proactive compliance culture, publicly available governance reports, and no material legal disputes."
+    },
+    tax: {
+      low:  "Use of tax havens, profit shifting to low-tax jurisdictions, or investigations by SKAT or EU authorities for tax avoidance.",
+      high: "Full public country-by-country tax reporting, effective tax rate aligned with Danish corporate rates, and no offshore structures without clear business purpose."
+    },
+    social: {
+      low:  "No community investment, history of lobbying against social or environmental legislation, or involvement in scandals harming local communities.",
+      high: "Verified community programmes, partnerships with Danish NGOs or educational institutions, measurable social impact reporting, and active stakeholder dialogue."
+    }
+  };
+  const ex = catExamples[modalState.cat.id] || {low:"", high:""};
+  document.getElementById("m-guide").innerHTML = `
+    <div style="margin-bottom:10px">
+      <div style="font-size:9px;letter-spacing:2px;color:#3a4a6b;text-transform:uppercase;margin-bottom:6px">What each star means</div>
+      ${GUIDE.map(g =>
+        `<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <div style="display:flex;gap:2px;flex-shrink:0">${[1,2,3,4,5].map(i=>`<svg width="10" height="10" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${i<=g.s?g.color:"none"}" stroke="${i<=g.s?g.color:"#2a3a5e"}" stroke-width="1.5"/></svg>`).join("")}</div>
+          <span style="font-size:11px;color:${g.color}">${g.label} — <span style="color:#4a5a7a">${g.desc}</span></span>
+        </div>`
+      ).join("")}
+    </div>
+    <div style="height:1px;background:#1a2744;margin-bottom:10px"></div>
+    <div style="margin-bottom:6px">
+      <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('▸')?'▾ Hide examples':'▸ Show rating examples'" style="background:none;border:none;color:#C9A84C;font-size:11px;letter-spacing:1px;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif">▸ Show rating examples</button>
+      <div style="display:none;margin-top:10px">
+        <div style="margin-bottom:8px;padding:10px 12px;background:#0c1525;border-left:2px solid #4CAF82;border-radius:0 2px 2px 0">
+          <div style="font-size:9px;letter-spacing:2px;color:#4CAF82;text-transform:uppercase;margin-bottom:4px">★★★★★ — What this looks like</div>
+          <div style="font-size:12px;color:#7a8a9a;line-height:1.6">${ex.high}</div>
+        </div>
+        <div style="padding:10px 12px;background:#0c1525;border-left:2px solid #D94F4F;border-radius:0 2px 2px 0">
+          <div style="font-size:9px;letter-spacing:2px;color:#D94F4F;text-transform:uppercase;margin-bottom:4px">★ — What this looks like</div>
+          <div style="font-size:12px;color:#7a8a9a;line-height:1.6">${ex.low}</div>
+        </div>
+      </div>
+    </div>`;
   renderModalStars();
   document.getElementById("modal").style.display = "flex";
 }
@@ -535,7 +727,7 @@ function getFiltered() {
   );
   if (currentSort === "revenue") list.sort((a,b) => b.rev - a.rev);
   else if (currentSort === "name") list.sort((a,b) => a.name.localeCompare(b.name));
-  else list.sort((a,b) => getOverall(ratings[b.id]) - getOverall(ratings[a.id]));
+  else list.sort((a,b) => getOverallForCo(b.id) - getOverallForCo(a.id));
   return list;
 }
 
@@ -551,11 +743,18 @@ function renderGrid() {
   const grid = document.getElementById("grid");
   grid.innerHTML = items.map(co => {
     const cr = ratings[co.id];
-    const ov = getOverall(cr);
+    // Build locked scores for this company for grid display
+    const coLocked = {};
+    CATS.forEach(cat => {
+      const fk = co.id+"_"+cat.id;
+      if (approvedFlags[fk] === "violation") coLocked[cat.id] = 1;
+      else if (approvedFlags[fk] === "frontrunner") coLocked[cat.id] = 5;
+    });
+    const ov = CATS.map(c => coLocked[c.id] !== undefined ? coLocked[c.id] : cr[c.id].total/cr[c.id].count).reduce((a,b)=>a+b,0)/CATS.length;
     const {g, c} = getGrade(ov);
     const catBars = CATS.map(cat => {
-      const s = cr[cat.id].total / cr[cat.id].count;
-      return `<div title="${cat.label}">
+      const s = coLocked[cat.id] !== undefined ? coLocked[cat.id] : cr[cat.id].total / cr[cat.id].count;
+      return `<div title="${cat.label}: ${cat.desc}">
         <div style="font-size:8px;color:#2a3a4a;margin-bottom:2px;text-transform:uppercase">${cat.label[0]}</div>
         <div class="mini-bar"><div style="height:100%;border-radius:2px;background:${sc(s)};width:${((s-1)/4)*100}%"></div></div>
       </div>`;
@@ -570,7 +769,7 @@ function renderGrid() {
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
         ${starsHtml(Math.round(ov), false, 13)}
-        <span style="font-size:12px;color:#C9A84C;font-weight:600">${ov.toFixed(2)}</span>
+        <span style="font-size:12px;color:#C9A84C;font-weight:600">${ov.toFixed(1)}</span>
         <span style="font-size:10px;color:#2a3a5a;margin-left:auto">${co.hq}</span>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:6px">
@@ -617,6 +816,60 @@ function changePage(p) { currentPage = p; renderGrid(); window.scrollTo(0,0); }
 function sortChanged() { currentSort = document.getElementById("sort-sel").value; currentPage = 1; renderGrid(); }
 function searchChanged() { currentSearch = document.getElementById("search-inp").value; currentPage = 1; renderGrid(); }
 
+// ── Flag modal ────────────────────────────────────────────────────
+let flagState = null;
+let selectedFlagType = null;
+
+function openFlagModal(coId, catId, coName, catLabel) {
+  if (!user) { showAuth("register"); return; }
+  flagState = { coId, catId };
+  selectedFlagType = null;
+  document.getElementById("fm-company").textContent = coName;
+  document.getElementById("fm-cat").textContent = catLabel;
+  document.getElementById("fm-url").value = "";
+  document.getElementById("fm-explanation").value = "";
+  resetFlagBtns();
+  document.getElementById("flag-modal").style.display = "flex";
+}
+
+function resetFlagBtns() {
+  document.getElementById("fm-violation-btn").style.opacity = "0.5";
+  document.getElementById("fm-frontrunner-btn").style.opacity = "0.5";
+}
+
+function selectFlagType(type) {
+  selectedFlagType = type;
+  resetFlagBtns();
+  document.getElementById(type === "violation" ? "fm-violation-btn" : "fm-frontrunner-btn").style.opacity = "1";
+}
+
+function closeFlagModal() {
+  document.getElementById("flag-modal").style.display = "none";
+  flagState = null;
+}
+
+async function submitFlag() {
+  if (!selectedFlagType) { showToast("Please select Proven Violation or Industry Frontrunner."); return; }
+  const url = document.getElementById("fm-url").value.trim();
+  const explanation = document.getElementById("fm-explanation").value.trim();
+  if (!url) { showToast("Please provide a source URL."); return; }
+  if (!explanation) { showToast("Please add a brief explanation."); return; }
+  const btn = document.getElementById("fm-submit");
+  btn.textContent = "Submitting…"; btn.disabled = true;
+  const { error } = await sb.from("flags").insert({
+    user_id: user.id,
+    company_id: flagState.coId,
+    category: flagState.catId,
+    flag_type: selectedFlagType,
+    source_url: url,
+    explanation
+  });
+  btn.textContent = "Submit Evidence for Review"; btn.disabled = false;
+  if (error) { showToast("Error submitting: " + error.message); return; }
+  closeFlagModal();
+  showToast("Evidence submitted — thank you. It will be reviewed shortly.");
+}
+
 // ── Session restore on page load ──────────────────────────────────
 async function init() {
   renderGuide();
@@ -629,7 +882,8 @@ async function init() {
     updateNav();
     await loadUserRatings();
   }
-  // Load real ratings from database
+  // Load real ratings and flags from database
+  await loadFlags();
   await loadRatings();
 }
 
