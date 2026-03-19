@@ -372,8 +372,8 @@ function seedRatings() {
   COMPANIES.forEach(c => {
     ratings[c.id] = {};
     CATS.forEach(cat => {
-      const base = 2.3 + Math.random() * 2.1;
-      ratings[c.id][cat.id] = {total: base * 30, count: 30};
+      // Neutral placeholder: exactly 3 stars, 0 real votes
+      ratings[c.id][cat.id] = {total: 3 * 1, count: 1, seeded: true};
     });
   });
 }
@@ -386,14 +386,19 @@ let sourceUrls = {}; // key: companyId_catId → array of URLs
 async function loadRatings() {
   const { data, error } = await sb.from("ratings").select("company_id, category, score, source_url");
   if (error || !data) return;
-  // Reset to base seed then layer real ratings on top
+  // Reset to neutral seed then layer real ratings on top
   seedRatings();
   sourceUrls = {};
   data.forEach(row => {
     if (!ratings[row.company_id]) return;
     if (!ratings[row.company_id][row.category]) return;
-    ratings[row.company_id][row.category].total += row.score;
-    ratings[row.company_id][row.category].count += 1;
+    // First real vote: replace seed entirely
+    if (ratings[row.company_id][row.category].seeded) {
+      ratings[row.company_id][row.category] = {total: row.score, count: 1};
+    } else {
+      ratings[row.company_id][row.category].total += row.score;
+      ratings[row.company_id][row.category].count += 1;
+    }
     if (row.source_url) {
       const key = row.company_id + "_" + row.category;
       if (!sourceUrls[key]) sourceUrls[key] = [];
