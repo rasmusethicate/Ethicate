@@ -97,9 +97,15 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
     <svg width="22" height="22" viewBox="0 0 28 28"><polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#C9A84C" stroke-width="1.5"/><polygon points="14,6 22,10 22,18 14,22 6,18 6,10" fill="#C9A84C18"/></svg>
     <span>ETHICATE</span>
   </div>
-  <div style="display:flex;gap:16px;align-items:center" id="nav-right">
-    <span style="font-size:11px;color:#5a6a8a;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showAuth('login')">Sign in</span>
-    <button class="gold-btn" onclick="showAuth('register')">Join Free</button>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;border:1px solid #1a2744;border-radius:2px;overflow:hidden">
+      <button id="lang-en" onclick="setLang('en')" style="background:#C9A84C1a;border:none;padding:4px 10px;font-size:10px;letter-spacing:1px;color:#C9A84C;cursor:pointer;font-family:'DM Sans',sans-serif">EN</button>
+      <button id="lang-da" onclick="setLang('da')" style="background:transparent;border:none;padding:4px 10px;font-size:10px;letter-spacing:1px;color:#3a4a6b;cursor:pointer;font-family:'DM Sans',sans-serif">DA</button>
+    </div>
+    <div style="display:flex;gap:16px;align-items:center" id="nav-right">
+      <span style="font-size:11px;color:#5a6a8a;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showAuth('login')">Sign in</span>
+      <button class="gold-btn" onclick="showAuth('register')">Join Free</button>
+    </div>
   </div>
 </nav>
 
@@ -107,30 +113,30 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
   <div style="max-width:1240px;margin:0 auto;padding:48px 24px">
     <!-- Hero -->
     <div style="text-align:center;margin-bottom:48px">
-      <p style="font-size:10px;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:14px">Denmark's Corporate Ethics Monitor</p>
-      <h1 class="serif" style="font-size:clamp(36px,6vw,68px);font-weight:300;line-height:1.1;margin-bottom:14px">Hold Companies<br><em style="color:#C9A84C">Accountable.</em></h1>
-      <p style="font-size:14px;color:#6a7a9a;max-width:420px;margin:0 auto 24px;line-height:1.8">Rate Denmark's 293 largest companies on ethics, environment, human rights, legal compliance, tax, and social responsibility.</p>
+      <p data-t="tagline" style="font-size:10px;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:14px">Denmark's Corporate Ethics Monitor</p>
+      <h1 data-t="hero" class="serif" style="font-size:clamp(36px,6vw,68px);font-weight:300;line-height:1.1;margin-bottom:14px">Hold Companies<br><em style="color:#C9A84C">Accountable.</em></h1>
+      <p data-t="heroSub" style="font-size:14px;color:#6a7a9a;max-width:420px;margin:0 auto 24px;line-height:1.8">Rate Denmark's 293 largest companies on ethics, environment, human rights, legal compliance, tax, and social responsibility.</p>
       <div style="display:flex;gap:10px;justify-content:center">
-        <button class="gold-btn" style="padding:11px 28px" onclick="showAuth('register')">Start Rating</button>
-        <button class="ghost-btn" onclick="document.getElementById('companies').scrollIntoView({behavior:'smooth'})">Browse Companies</button>
+        <button data-t="startRating" class="gold-btn" style="padding:11px 28px" onclick="showAuth('register')">Start Rating</button>
+        <button data-t="browseCompanies" class="ghost-btn" onclick="document.getElementById('companies').scrollIntoView({behavior:'smooth'})">Browse Companies</button>
       </div>
     </div>
     <!-- Stats -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1a2744;border-radius:4px;overflow:hidden;margin-bottom:36px">
-      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">293</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Companies</div></div>
-      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">8</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Categories</div></div>
-      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">42</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Sectors</div></div>
-      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">Free</div><div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">To Use</div></div>
+      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">293</div><div data-t="statCompanies" style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Companies</div></div>
+      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">8</div><div data-t="statCategories" style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Categories</div></div>
+      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">42</div><div data-t="statSectors" style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Sectors</div></div>
+      <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">Free</div><div data-t="statFreeLabel" style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">To Use</div></div>
     </div>
     <!-- Guide -->
     <div style="background:#0c1525;border:1px solid #1a2744;border-radius:4px;padding:18px 22px;margin-bottom:36px">
-      <p style="font-size:9px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:10px">The Ethicate Star Scale</p>
+      <p data-t="guideTitle" style="font-size:9px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:10px">The Ethicate Star Scale</p>
       <div style="display:flex;gap:16px;flex-wrap:wrap" id="guide-row"></div>
     </div>
     <!-- Controls -->
     <div id="companies">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
-        <h2 class="serif" style="font-size:22px;font-weight:400">All Companies</h2>
+        <h2 data-t="allCompanies" class="serif" style="font-size:22px;font-weight:400">All Companies</h2>
         <div style="display:flex;gap:8px;align-items:center">
           <select id="sort-sel" onchange="sortChanged()" style="background:#111b30;border:1px solid #1a2744;border-radius:2px;padding:7px 10px;color:#e8eaf2;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer">
             <option value="revenue">By Revenue</option>
@@ -155,8 +161,8 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
       <span style="font-size:11px;letter-spacing:2px;color:#2a3a5a">ETHICATE — Corporate Ethics for Denmark</span>
     </div>
     <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
-      <span style="font-size:10px;color:#2a3a5a">293 companies · Citizen-powered · Independent</span>
-      <span style="font-size:10px;color:#3a4a6b;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showPrivacy()">Privacy Policy</span>
+      <span data-t="footerSub" style="font-size:10px;color:#2a3a5a">293 companies · Citizen-powered · Independent</span>
+      <span data-t="privacyPolicy" style="font-size:10px;color:#3a4a6b;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showPrivacy()">Privacy Policy</span>
     </div>
   </footer>
 </div>
@@ -232,7 +238,7 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
       <svg width="14" height="14" viewBox="0 0 28 28"><polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#C9A84C" stroke-width="1.5"/></svg>
       <span style="font-size:11px;letter-spacing:2px;color:#2a3a5a">ETHICATE — Corporate Ethics for Denmark</span>
     </div>
-    <span style="font-size:10px;color:#2a3a5a">293 companies · Citizen-powered · Independent</span>
+    <span data-t="footerSub" style="font-size:10px;color:#2a3a5a">293 companies · Citizen-powered · Independent</span>
   </footer>
 </div>
 
@@ -345,12 +351,220 @@ const CATS = [
    tooltip:"Assesses how responsibly the company collects, stores, and uses personal data — including GDPR compliance, history of data breaches, cooperation with Datatilsynet, cybersecurity investment, and transparency about what data is collected and why. A high score means the company treats data protection as a core obligation with verified practices; a low score means fines, breaches, or a pattern of misusing personal information."},
 ];
 const GUIDE = [
-  {s:5,color:"#4CAF82",label:"Industry Frontrunner",desc:"Standard-setter for the entire industry."},
-  {s:4,color:"#8BC45A",label:"Exceeds Standards",   desc:"Voluntarily goes beyond regulations."},
-  {s:3,color:"#C9A84C",label:"Neutral",             desc:"No notable positive or negative record."},
-  {s:2,color:"#E07B3A",label:"Under Suspicion",     desc:"Ongoing investigations or serious allegations."},
-  {s:1,color:"#D94F4F",label:"Proven Violation",    desc:"Confirmed breach or worst in industry."},
+  {s:5,color:"#4CAF82",label:"Industry Frontrunner",desc:"Standard-setter for the entire industry.",
+   tooltip:"A company at this level sets the standard that the rest of the industry aspires to. It goes far beyond legal requirements, publishes verified evidence of its conduct, and can demonstrate measurable, positive impact. Independent third parties confirm its claims."},
+  {s:4,color:"#8BC45A",label:"Exceeds Standards",   desc:"Voluntarily goes beyond regulations.",
+   tooltip:"This company does more than the law requires. It has implemented policies and practices that go beyond minimum obligations, and there is credible evidence — such as certifications, audits, or public reporting — to support this."},
+  {s:3,color:"#C9A84C",label:"Neutral",             desc:"No notable positive or negative record.",
+   tooltip:"No significant positive or negative conduct on record in this area. The company appears to meet its legal obligations but has not distinguished itself in either direction. This is the default starting point before evidence is submitted."},
+  {s:2,color:"#E07B3A",label:"Under Suspicion",     desc:"Ongoing investigations or serious allegations.",
+   tooltip:"There are credible allegations, ongoing investigations, or a documented pattern of concerning behaviour in this area. No court ruling or confirmed violation yet, but the available evidence raises serious questions about the company's conduct."},
+  {s:1,color:"#D94F4F",label:"Proven Violation",    desc:"Confirmed breach or worst in industry.",
+   tooltip:"A court ruling, regulatory decision, or other authoritative finding has confirmed a breach of law, regulation, or fundamental ethical standards in this area within the past 15 years. This rating is reserved for confirmed, documented violations only."},
 ];
+
+// ── Language ──────────────────────────────────────────────────────
+let lang = "en";
+const T = {
+  en: {
+    tagline: "Denmark's Corporate Ethics Monitor",
+    hero1: "Hold Companies",
+    hero2: "Accountable.",
+    heroSub: "Rate Denmark's 293 largest companies on ethics, environment, human rights, legal compliance, tax, and social responsibility.",
+    startRating: "Start Rating",
+    browseCompanies: "Browse Companies",
+    statCompanies: "Companies",
+    statCategories: "Categories",
+    statSectors: "Sectors",
+    statFree: "Free",
+    statFreeLabel: "To Use",
+    guideTitle: "The Ethicate Star Scale",
+    allCompanies: "All Companies",
+    byRevenue: "By Revenue",
+    byName: "By Name",
+    byRating: "By Rating",
+    searchPlaceholder: "Search…",
+    signIn: "Sign in",
+    joinFree: "Join Free",
+    signOut: "Sign out",
+    deleteAccount: "Delete account",
+    welcomeBack: "Welcome Back",
+    joinEthicate: "Join Ethicate",
+    signInSub: "Sign in to rate companies",
+    joinSub: "Free forever. Your voice, amplified.",
+    yourName: "Your name",
+    emailAddress: "Email address",
+    password: "Password",
+    createAccount: "Create Account",
+    noAccount: "No account?",
+    haveAccount: "Have an account?",
+    back: "← Back",
+    allSector: "All",
+    footerSub: "293 companies · Citizen-powered · Independent",
+    privacyPolicy: "Privacy Policy",
+    noRatingsYet: "No ratings yet",
+    locked: "locked",
+    ratings: "ratings",
+    rating: "rating",
+    outOf5: "out of 5",
+    rateThis: "Rate This",
+    updateRating: "Update Rating",
+    submitEvidence: "⚑ Submit Evidence",
+    yourRating: "Your rating",
+    sources: "Sources",
+    submitRating: "Submit Rating",
+    sourceUrl: "Source URL",
+    optional: "— optional",
+    whyScoresHighly: "Why this company scores highly",
+    whyScoresPoorly: "Why this company scores poorly",
+    communityEvidenceHigh: "This company has a combined rating of",
+    communityEvidenceHigh2: "out of 5. The following sources have been submitted by the community as evidence of strong performance:",
+    communityEvidenceLow2: "out of 5. The following sources have been submitted by the community as evidence of concerning conduct:",
+    ratingGuide: "Rating Guide",
+    showExamples: "▸ Show rating examples",
+    hideExamples: "▾ Hide examples",
+    whatStarMeans: "What each star means",
+    allCompaniesBack: "← All Companies",
+    provenViolation: "Proven Violation",
+    industryFrontrunner: "Industry Frontrunner",
+    submitEvidenceTitle: "Submit Evidence for Review",
+    evidenceType: "Type of evidence",
+    evidenceTypeWarning: "Please select Proven Violation or Industry Frontrunner.",
+    evidenceUrlRequired: "Please provide a source URL.",
+    evidenceExplainRequired: "Please add a brief explanation.",
+    evidenceSubmitted: "Evidence submitted — thank you. It will be reviewed shortly.",
+    explanationLabel: "Explanation",
+    explanationSub: "— briefly describe what the source proves",
+    explanationPlaceholder: "e.g. Court ruling from 2021 confirming wage theft affecting 340 employees...",
+    reviewNote: "Your submission will be reviewed by the Ethicate admin before it locks the rating. You will not be notified of the outcome, but approved evidence will appear publicly on the company page.",
+    permanentAction: "Permanent Action",
+    deleteTitle: "Delete your account",
+    deleteDesc: "This will permanently delete your account, all your ratings, and all evidence you have submitted. This cannot be undone.",
+    deleteConfirmNote: "To confirm, type",
+    deleteConfirmWord: "DELETE",
+    deleteConfirmPlaceholder: "Type DELETE to confirm",
+    deleteBtn: "Permanently Delete Account",
+    deleteSuccess: "Your account and all data has been permanently deleted.",
+    deleteError: "Please type DELETE to confirm.",
+    ratingSubmitted: "Rating submitted — thank you!",
+    selectRating: "Please select a star rating.",
+    errorSaving: "Error saving rating: ",
+    errorSubmitting: "Error submitting: ",
+    errorDeleting: "Error deleting account: ",
+    fillFields: "Please fill in all fields.",
+    enterName: "Please enter your name.",
+    savingRating: "Saving…",
+    submittingEvidence: "Submitting…",
+    deletingAccount: "Deleting…",
+  },
+  da: {
+    tagline: "Danmarks Virksomhedsetiske Monitor",
+    hero1: "Stil virksomheder til",
+    hero2: "Ansvar.",
+    heroSub: "Bedøm Danmarks 293 største virksomheder inden for etik, miljø, menneskerettigheder, lovoverholdelse, skat og socialt ansvar.",
+    startRating: "Begynd at bedømme",
+    browseCompanies: "Gennemse virksomheder",
+    statCompanies: "Virksomheder",
+    statCategories: "Kategorier",
+    statSectors: "Sektorer",
+    statFree: "Gratis",
+    statFreeLabel: "At bruge",
+    guideTitle: "Ethicate Stjerneskalaen",
+    allCompanies: "Alle virksomheder",
+    byRevenue: "Efter omsætning",
+    byName: "Efter navn",
+    byRating: "Efter bedømmelse",
+    searchPlaceholder: "Søg…",
+    signIn: "Log ind",
+    joinFree: "Tilmeld gratis",
+    signOut: "Log ud",
+    deleteAccount: "Slet konto",
+    welcomeBack: "Velkommen tilbage",
+    joinEthicate: "Tilmeld Ethicate",
+    signInSub: "Log ind for at bedømme virksomheder",
+    joinSub: "Altid gratis. Din stemme, forstærket.",
+    yourName: "Dit navn",
+    emailAddress: "E-mailadresse",
+    password: "Adgangskode",
+    createAccount: "Opret konto",
+    noAccount: "Ingen konto?",
+    haveAccount: "Har du en konto?",
+    back: "← Tilbage",
+    allSector: "Alle",
+    footerSub: "293 virksomheder · Borgerdrevet · Uafhængig",
+    privacyPolicy: "Privatlivspolitik",
+    noRatingsYet: "Ingen bedømmelser endnu",
+    locked: "låst",
+    ratings: "bedømmelser",
+    rating: "bedømmelse",
+    outOf5: "ud af 5",
+    rateThis: "Bedøm denne",
+    updateRating: "Opdater bedømmelse",
+    submitEvidence: "⚑ Indsend bevis",
+    yourRating: "Din bedømmelse",
+    sources: "Kilder",
+    submitRating: "Indsend bedømmelse",
+    sourceUrl: "Kilde-URL",
+    optional: "— valgfri",
+    whyScoresHighly: "Hvorfor scorer denne virksomhed højt",
+    whyScoresPoorly: "Hvorfor scorer denne virksomhed lavt",
+    communityEvidenceHigh: "Denne virksomhed har en samlet bedømmelse på",
+    communityEvidenceHigh2: "ud af 5. Følgende kilder er indsendt af fællesskabet som bevis på stærke præstationer:",
+    communityEvidenceLow2: "ud af 5. Følgende kilder er indsendt af fællesskabet som bevis på bekymrende adfærd:",
+    ratingGuide: "Bedømmelsesguide",
+    showExamples: "▸ Vis bedømmelseseksempler",
+    hideExamples: "▾ Skjul eksempler",
+    whatStarMeans: "Hvad hver stjerne betyder",
+    allCompaniesBack: "← Alle virksomheder",
+    provenViolation: "Dokumenteret overtrædelse",
+    industryFrontrunner: "Brancheforkæmper",
+    submitEvidenceTitle: "Indsend bevis til gennemgang",
+    evidenceType: "Type af bevis",
+    evidenceTypeWarning: "Vælg venligst Dokumenteret overtrædelse eller Brancheforkæmper.",
+    evidenceUrlRequired: "Angiv venligst en kilde-URL.",
+    evidenceExplainRequired: "Tilføj venligst en kort forklaring.",
+    evidenceSubmitted: "Bevis indsendt — tak. Det vil blive gennemgået snarest.",
+    explanationLabel: "Forklaring",
+    explanationSub: "— beskriv kort hvad kilden beviser",
+    explanationPlaceholder: "f.eks. Domstolsafgørelse fra 2021 der bekræfter lønrøveri, der berørte 340 ansatte...",
+    reviewNote: "Din indsendelse vil blive gennemgået af Ethicate-administratoren, før den låser bedømmelsen. Du vil ikke blive underrettet om resultatet, men godkendt bevis vil fremgå offentligt på virksomhedens side.",
+    permanentAction: "Permanent handling",
+    deleteTitle: "Slet din konto",
+    deleteDesc: "Dette vil permanent slette din konto, alle dine bedømmelser og alt bevis du har indsendt. Dette kan ikke fortrydes.",
+    deleteConfirmNote: "For at bekræfte, skriv",
+    deleteConfirmWord: "SLET",
+    deleteConfirmPlaceholder: "Skriv SLET for at bekræfte",
+    deleteBtn: "Slet konto permanent",
+    deleteSuccess: "Din konto og alle data er permanent slettet.",
+    deleteError: "Skriv venligst SLET for at bekræfte.",
+    ratingSubmitted: "Bedømmelse indsendt — tak!",
+    selectRating: "Vælg venligst en stjernebedømmelse.",
+    errorSaving: "Fejl ved gemning: ",
+    errorSubmitting: "Fejl ved indsendelse: ",
+    errorDeleting: "Fejl ved sletning af konto: ",
+    fillFields: "Udfyld venligst alle felter.",
+    enterName: "Indtast venligst dit navn.",
+    savingRating: "Gemmer…",
+    submittingEvidence: "Indsender…",
+    deletingAccount: "Sletter…",
+  }
+};
+
+const GUIDE_DA = [
+  {s:5,color:"#4CAF82",label:"Brancheforkæmper",desc:"Sætter standarden for hele branchen.",
+   tooltip:"En virksomhed på dette niveau sætter den standard, som resten af branchen stræber efter. Den går langt ud over lovkrav, offentliggør verificeret dokumentation for sin adfærd og kan demonstrere målbar positiv effekt. Uafhængige tredjeparter bekræfter dens påstande."},
+  {s:4,color:"#8BC45A",label:"Overstiger standarder", desc:"Går frivilligt ud over lovkravene.",
+   tooltip:"Denne virksomhed gør mere end loven kræver. Den har implementeret politikker og praksisser, der går ud over minimumskrav, og der er troværdigt bevis — såsom certificeringer, revisioner eller offentlig rapportering — til at understøtte dette."},
+  {s:3,color:"#C9A84C",label:"Neutral",             desc:"Ingen bemærkelsesværdig positiv eller negativ rekord.",
+   tooltip:"Ingen væsentlig positiv eller negativ adfærd registreret på dette område. Virksomheden ser ud til at overholde sine juridiske forpligtelser, men har ikke udmærket sig i nogen retning. Dette er standardudgangspunktet, inden bevis er indsendt."},
+  {s:2,color:"#E07B3A",label:"Under mistanke",      desc:"Igangværende undersøgelser eller alvorlige anklager.",
+   tooltip:"Der er troværdige anklager, igangværende undersøgelser eller et dokumenteret mønster af bekymrende adfærd på dette område. Ingen domstolsafgørelse eller bekræftet overtrædelse endnu, men det tilgængelige bevis rejser alvorlige spørgsmål om virksomhedens adfærd."},
+  {s:1,color:"#D94F4F",label:"Dokumenteret overtrædelse", desc:"Bekræftet brud eller værst i branchen.",
+   tooltip:"En domstolsafgørelse, myndighedsbeslutning eller anden autoritativ konstatering har bekræftet et brud på lov, regulering eller grundlæggende etiske standarder på dette område inden for de seneste 15 år. Denne bedømmelse er forbeholdt bekræftede, dokumenterede overtrædelser."},
+];
+
+function t(key) { return T[lang][key] || T.en[key] || key; }
+function currentGuide() { return lang === "da" ? GUIDE_DA : GUIDE; }
 
 // ── App state ─────────────────────────────────────────────────────
 let user = null;
@@ -864,7 +1078,7 @@ function showToast(msg) {
 // ── Home grid ─────────────────────────────────────────────────────
 function getFiltered() {
   let list = COMPANIES.filter(c =>
-    (currentSector === "All" || c.sector === currentSector) &&
+    (currentSector === t("allSector") || currentSector === "All" || c.sector === currentSector) &&
     (c.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
      c.hq.toLowerCase().includes(currentSearch.toLowerCase()) ||
      c.sector.toLowerCase().includes(currentSearch.toLowerCase()) ||
@@ -940,19 +1154,86 @@ function renderGrid() {
 }
 
 function renderSectors() {
-  const sectors = ["All", ...SECTOR_NAMES];
+  const sectors = [t("allSector"), ...SECTOR_NAMES];
   document.getElementById("sector-btns").innerHTML = sectors.map(s =>
     `<button class="sec-btn ${s===currentSector?"active":""}" onclick="setSector('${s.replace(/'/g,"\'")}')">  ${s}</button>`
   ).join("");
 }
 
 function renderGuide() {
-  document.getElementById("guide-row").innerHTML = GUIDE.map(g =>
-    `<div style="display:flex;align-items:center;gap:6px">
-      <div style="display:flex;gap:2px">${[1,2,3,4,5].map(i=>`<svg width="11" height="11" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${i<=g.s?g.color:"none"}" stroke="${i<=g.s?g.color:"#2a3a5e"}" stroke-width="1.5"/></svg>`).join("")}</div>
+  document.getElementById("guide-row").innerHTML = currentGuide().map(g =>
+    `<div style="position:relative;display:flex;align-items:center;gap:6px;cursor:default" onmouseenter="showGuideTooltip(this,'${g.s}')" onmouseleave="hideGuideTooltip(this)">
+      <div style="display:flex;gap:2px">${[1,2,3,4,5].map(i=>`<svg width="13" height="13" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${i<=g.s?g.color:"none"}" stroke="${i<=g.s?g.color:"#2a3a5e"}" stroke-width="1.5"/></svg>`).join("")}</div>
       <span style="font-size:11px;color:${g.color};font-weight:500">${g.label}</span>
+      <div class="guide-tooltip" style="display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#111b30;border:1px solid ${g.color}44;border-left:3px solid ${g.color};border-radius:3px;padding:10px 12px;z-index:100;pointer-events:none">
+        <div style="font-size:9px;letter-spacing:1.5px;color:${g.color};text-transform:uppercase;margin-bottom:5px">${g.label}</div>
+        <div style="font-size:11px;color:#7a8a9a;line-height:1.6">${g.tooltip}</div>
+      </div>
     </div>`
   ).join("");
+}
+
+function showGuideTooltip(el) {
+  const tip = el.querySelector(".guide-tooltip");
+  if (tip) tip.style.display = "block";
+}
+function hideGuideTooltip(el) {
+  const tip = el.querySelector(".guide-tooltip");
+  if (tip) tip.style.display = "none";
+}
+
+function setLang(l) {
+  lang = l;
+  document.getElementById("lang-en").style.background = l === "en" ? "#C9A84C1a" : "transparent";
+  document.getElementById("lang-en").style.color = l === "en" ? "#C9A84C" : "#3a4a6b";
+  document.getElementById("lang-da").style.background = l === "da" ? "#C9A84C1a" : "transparent";
+  document.getElementById("lang-da").style.color = l === "da" ? "#C9A84C" : "#3a4a6b";
+  applyTranslations();
+  renderGuide();
+  renderAll();
+}
+
+function applyTranslations() {
+  // Hero
+  const heroTag = document.querySelector("#view-home p[data-t='tagline']");
+  if (heroTag) heroTag.textContent = t("tagline");
+  const heroH = document.querySelector("#view-home h1[data-t='hero']");
+  if (heroH) heroH.innerHTML = t("hero1")+"<br><em style='color:#C9A84C'>"+t("hero2")+"</em>";
+  const heroSub = document.querySelector("#view-home p[data-t='heroSub']");
+  if (heroSub) heroSub.textContent = t("heroSub");
+  // Buttons
+  const startBtn = document.querySelector("button[data-t='startRating']");
+  if (startBtn) startBtn.textContent = t("startRating");
+  const browseBtn = document.querySelector("button[data-t='browseCompanies']");
+  if (browseBtn) browseBtn.textContent = t("browseCompanies");
+  // Stats
+  ["statCompanies","statCategories","statSectors","statFreeLabel"].forEach(k => {
+    const el = document.querySelector(`[data-t='${k}']`);
+    if (el) el.textContent = t(k);
+  });
+  // Guide title
+  const gt = document.querySelector("[data-t='guideTitle']");
+  if (gt) gt.textContent = t("guideTitle");
+  // Sort select
+  const sel = document.getElementById("sort-sel");
+  if (sel) {
+    sel.options[0].text = t("byRevenue");
+    sel.options[1].text = t("byName");
+    sel.options[2].text = t("byRating");
+  }
+  // Search placeholder
+  const srch = document.getElementById("search-inp");
+  if (srch) srch.placeholder = t("searchPlaceholder");
+  // All companies heading
+  const ac = document.querySelector("h2[data-t='allCompanies']");
+  if (ac) ac.textContent = t("allCompanies");
+  // Footer
+  const fs = document.querySelector("[data-t='footerSub']");
+  if (fs) fs.textContent = t("footerSub");
+  const fp = document.querySelector("[data-t='privacyPolicy']");
+  if (fp) fp.textContent = t("privacyPolicy");
+  // Nav
+  updateNav();
 }
 
 function renderAll() { renderSectors(); renderGrid(); }
