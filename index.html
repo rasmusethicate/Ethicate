@@ -138,32 +138,32 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
     <div style="margin-bottom:48px">
       <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;background:#111b30;border:1px solid #1a2744;border-radius:4px;overflow:hidden">
         <div style="padding:28px 24px">
-          <div style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">The Problem</div>
-          <p style="font-size:14px;color:#6a7a9a;line-height:1.9">In today's world, it is becoming increasingly difficult to act and consume in alignment with your own values. Corporate conduct is complex, often opaque, and spread across hundreds of sources — most people simply don't have the time to investigate.</p>
+          <div data-t="missionProblemLabel" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">The Problem</div>
+          <p data-t="missionProblem" style="font-size:14px;color:#6a7a9a;line-height:1.9">In today's world, it is becoming increasingly difficult to act and consume in alignment with your own values. Corporate conduct is complex, often opaque, and spread across hundreds of sources — most people simply don't have the time to investigate.</p>
         </div>
         <div style="background:#1a2744"></div>
         <div style="padding:28px 24px">
-          <div style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">Our Mission</div>
-          <p style="font-size:14px;color:#6a7a9a;line-height:1.9">Ethicate exists to change that. We bring together citizen knowledge, public records, and verified evidence to create the most transparent picture of corporate conduct in Denmark — freely available to everyone.</p>
+          <div data-t="missionLabel" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">Our Mission</div>
+          <p data-t="mission" style="font-size:14px;color:#6a7a9a;line-height:1.9">Ethicate exists to change that. We bring together citizen knowledge, public records, and verified evidence to create the most transparent picture of corporate conduct in Denmark — freely available to everyone.</p>
         </div>
         <div style="background:#1a2744"></div>
         <div style="padding:28px 24px">
-          <div style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">How It Works</div>
-          <p style="font-size:14px;color:#6a7a9a;line-height:1.9">Anyone can rate a company and submit evidence. Ratings are evidence-based, not opinion. Every source is public. Proven violations lock the rating. The result is a living record of corporate accountability — built by citizens, for citizens.</p>
+          <div data-t="missionHowLabel" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">How It Works</div>
+          <p data-t="missionHow" style="font-size:14px;color:#6a7a9a;line-height:1.9">Anyone can rate a company and submit evidence. Ratings are evidence-based, not opinion. Every source is public. Proven violations lock the rating. The result is a living record of corporate accountability — built by citizens, for citizens.</p>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#1a2744;border:1px solid #1a2744;border-top:none;border-radius:0 0 4px 4px;overflow:hidden">
         <div style="background:#0c1525;padding:16px 24px;display:flex;align-items:center;gap:12px">
           <span style="font-size:20px">◆</span>
-          <span style="font-size:12px;color:#4a5a7a;line-height:1.6">Evidence-based ratings — every score is traceable to a source</span>
+          <span data-t="principle1" style="font-size:12px;color:#4a5a7a;line-height:1.6">Evidence-based ratings — every score is traceable to a source</span>
         </div>
         <div style="background:#0c1525;padding:16px 24px;display:flex;align-items:center;gap:12px">
           <span style="font-size:20px">◈</span>
-          <span style="font-size:12px;color:#4a5a7a;line-height:1.6">Independent and non-commercial — no company can buy a better score</span>
+          <span data-t="principle2" style="font-size:12px;color:#4a5a7a;line-height:1.6">Independent and non-commercial — no company can buy a better score</span>
         </div>
         <div style="background:#0c1525;padding:16px 24px;display:flex;align-items:center;gap:12px">
           <span style="font-size:20px">◉</span>
-          <span style="font-size:12px;color:#4a5a7a;line-height:1.6">Always free — transparency should not be a privilege</span>
+          <span data-t="principle3" style="font-size:12px;color:#4a5a7a;line-height:1.6">Always free — transparency should not be a privilege</span>
         </div>
       </div>
     </div>
@@ -805,6 +805,15 @@ const T = {
     savingRating: "Saving…",
     submittingEvidence: "Submitting…",
     deletingAccount: "Deleting…",
+    missionProblemLabel: "The Problem",
+    missionProblem: "In today's world, it is becoming increasingly difficult to act and consume in alignment with your own values. Corporate conduct is complex, often opaque, and spread across hundreds of sources — most people simply don't have the time to investigate.",
+    missionLabel: "Our Mission",
+    mission: "Ethicate exists to change that. We bring together citizen knowledge, public records, and verified evidence to create the most transparent picture of corporate conduct in Denmark — freely available to everyone.",
+    missionHowLabel: "How It Works",
+    missionHow: "Anyone can rate a company and submit evidence. Ratings are evidence-based, not opinion. Every source is public. Proven violations lock the rating. The result is a living record of corporate accountability — built by citizens, for citizens.",
+    principle1: "Evidence-based ratings — every score is traceable to a source",
+    principle2: "Independent and non-commercial — no company can buy a better score",
+    principle3: "Always free — transparency should not be a privilege",
   },
   da: {
     tagline: "Danmarks Virksomhedsetiske Monitor",
@@ -896,6 +905,15 @@ const T = {
     savingRating: "Gemmer…",
     submittingEvidence: "Indsender…",
     deletingAccount: "Sletter…",
+    missionProblemLabel: "Problemet",
+    missionProblem: "I dagens verden er det blevet stadig vanskeligere at handle og forbruge i overensstemmelse med sine egne værdier. Virksomheders adfærd er kompleks, ofte ugennemsigtig og spredt over hundredvis af kilder — de fleste mennesker har simpelthen ikke tid til at undersøge det.",
+    missionLabel: "Vores Mission",
+    mission: "Ethicate eksisterer for at ændre på det. Vi samler borgerviden, offentlige registre og verificeret dokumentation for at skabe det mest gennemsigtige billede af virksomheders adfærd i Danmark — frit tilgængeligt for alle.",
+    missionHowLabel: "Sådan Fungerer Det",
+    missionHow: "Alle kan bedømme en virksomhed og indsende dokumentation. Bedømmelser er bevisbaserede, ikke meningsbaserede. Alle kilder er offentlige. Dokumenterede overtrædelser låser bedømmelsen. Resultatet er et levende register over virksomhedsansvar — skabt af borgere, for borgere.",
+    principle1: "Bevisbaserede bedømmelser — hvert resultat kan spores til en kilde",
+    principle2: "Uafhængig og ikke-kommerciel — ingen virksomhed kan købe en bedre score",
+    principle3: "Altid gratis — gennemsigtighed bør ikke være et privilegium",
   }
 };
 
@@ -1701,6 +1719,11 @@ function applyTranslations() {
   if (fs) fs.textContent = t("footerSub");
   const fp = document.querySelector("[data-t='privacyPolicy']");
   if (fp) fp.textContent = t("privacyPolicy");
+  // Mission section
+  ["missionProblemLabel","missionProblem","missionLabel","mission","missionHowLabel","missionHow","principle1","principle2","principle3"].forEach(k => {
+    const el = document.querySelector(`[data-t='${k}']`);
+    if (el) el.textContent = t(k);
+  });
   // Nav
   updateNav();
 }
