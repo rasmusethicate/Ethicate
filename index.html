@@ -12,7 +12,7 @@ body{background:#0b1120;color:#e8eaf2;font-family:'DM Sans',sans-serif;min-heigh
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#0b1120}::-webkit-scrollbar-thumb{background:#1e2e4a;border-radius:2px}
 a{color:#C9A84C;text-decoration:none}
 .serif{font-family:'Cormorant Garamond',Georgia,serif}
-nav{border-bottom:1px solid #1a2744;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0b1120ee;backdrop-filter:blur(10px);z-index:50}
+nav{border-bottom:1px solid #1a2744;padding:0 16px;min-height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0b1120ee;backdrop-filter:blur(10px);z-index:50;flex-wrap:wrap;gap:8px}
 .logo{display:flex;align-items:center;gap:10px;cursor:pointer}
 .logo span{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;letter-spacing:3px}
 .gold-btn{background:#C9A84C;color:#0b1120;border:none;padding:8px 20px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px}
@@ -116,19 +116,19 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
 </nav>
 
 <div id="view-home">
-  <div style="max-width:1240px;margin:0 auto;padding:48px 24px">
+  <div style="max-width:1240px;margin:0 auto;padding:32px 16px">
     <!-- Hero -->
     <div style="text-align:center;margin-bottom:48px">
       <p data-t="tagline" style="font-size:10px;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:14px">Denmark's Corporate Ethics Monitor</p>
       <h1 data-t="hero" class="serif" style="font-size:clamp(36px,6vw,68px);font-weight:300;line-height:1.1;margin-bottom:14px">Hold Companies<br><em style="color:#C9A84C">Accountable.</em></h1>
       <p data-t="heroSub" style="font-size:14px;color:#6a7a9a;max-width:420px;margin:0 auto 24px;line-height:1.8">Rate 500 Danish and international companies operating in Denmark — on ethics, environment, human rights, legal compliance, tax, animal welfare, data privacy, and social responsibility.</p>
-      <div style="display:flex;gap:10px;justify-content:center">
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
         <button data-t="startRating" class="gold-btn" style="padding:11px 28px" onclick="showAuth('register')">Start Rating</button>
         <button data-t="browseCompanies" class="ghost-btn" onclick="document.getElementById('companies').scrollIntoView({behavior:'smooth'})">Browse Companies</button>
       </div>
     </div>
     <!-- Stats -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1a2744;border-radius:4px;overflow:hidden;margin-bottom:36px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:#1a2744;border-radius:4px;overflow:hidden;margin-bottom:36px">
       <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">500</div><div data-t="statCompanies" style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Companies</div></div>
       <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">8</div><div data-t="statCategories" style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Categories</div></div>
       <div style="background:#0c1525;padding:18px;text-align:center"><div class="serif" style="font-size:28px;font-weight:700;color:#C9A84C;margin-bottom:3px">42</div><div data-t="statSectors" style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Sectors</div></div>
@@ -136,34 +136,36 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
     </div>
     <!-- Mission -->
     <div style="margin-bottom:48px">
-      <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;background:#111b30;border:1px solid #1a2744;border-radius:4px;overflow:hidden">
-        <div style="padding:28px 24px">
-          <div data-t="missionProblemLabel" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">The Problem</div>
-          <p data-t="missionProblem" style="font-size:14px;color:#6a7a9a;line-height:1.9">In today's world, it is becoming increasingly difficult to act and consume in alignment with your own values. Corporate conduct is complex, often opaque, and spread across hundreds of sources — most people simply don't have the time to investigate.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:#1a2744;border-radius:4px;overflow:hidden;align-items:stretch">
+        <div style="background:#111b30;display:flex;flex-direction:column">
+          <div style="padding:28px 24px;flex:1;display:flex;flex-direction:column">
+            <div data-t="missionProblemLabel" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">The Problem</div>
+            <p data-t="missionProblem" style="font-size:14px;color:#6a7a9a;line-height:1.9;flex:1">In today's world, it is becoming increasingly difficult to act and consume in alignment with your own values. Corporate conduct is complex, often opaque, and spread across hundreds of sources — most people simply don't have the time to investigate.</p>
+          </div>
+          <div style="padding:16px 24px;display:flex;align-items:center;gap:10px;background:#0c1525;border-top:1px solid #1a2744;min-height:56px">
+            <span style="font-size:16px;flex-shrink:0">◆</span>
+            <span data-t="principle1" style="font-size:11px;color:#4a5a7a;line-height:1.5">Evidence-based ratings — every score is traceable to a source</span>
+          </div>
         </div>
-        <div style="background:#1a2744"></div>
-        <div style="padding:28px 24px">
-          <div data-t="missionLabel" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">Our Mission</div>
-          <p data-t="mission" style="font-size:14px;color:#6a7a9a;line-height:1.9">Ethicate exists to change that. We bring together citizen knowledge, public records, and verified evidence to create the most transparent picture of corporate conduct in Denmark — freely available to everyone.</p>
+        <div style="background:#111b30;display:flex;flex-direction:column">
+          <div style="padding:28px 24px;flex:1;display:flex;flex-direction:column">
+            <div data-t="missionLabel" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">Our Mission</div>
+            <p data-t="mission" style="font-size:14px;color:#6a7a9a;line-height:1.9;flex:1">Ethicate exists to change that. We bring together citizen knowledge, public records, and verified evidence to create the most transparent picture of corporate conduct in Denmark — freely available to everyone.</p>
+          </div>
+          <div style="padding:16px 24px;display:flex;align-items:center;gap:10px;background:#0c1525;border-top:1px solid #1a2744;min-height:56px">
+            <span style="font-size:16px;flex-shrink:0">◈</span>
+            <span data-t="principle2" style="font-size:11px;color:#4a5a7a;line-height:1.5">Independent and non-commercial — no company can buy a better score</span>
+          </div>
         </div>
-        <div style="background:#1a2744"></div>
-        <div style="padding:28px 24px">
-          <div data-t="missionHowLabel" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">How It Works</div>
-          <p data-t="missionHow" style="font-size:14px;color:#6a7a9a;line-height:1.9">Anyone can rate a company and submit evidence. Ratings are evidence-based, not opinion. Every source is public. Proven violations lock the rating. The result is a living record of corporate accountability — built by citizens, for citizens.</p>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#1a2744;border:1px solid #1a2744;border-top:none;border-radius:0 0 4px 4px;overflow:hidden">
-        <div style="background:#0c1525;padding:16px 24px;display:flex;align-items:center;gap:12px">
-          <span style="font-size:20px">◆</span>
-          <span data-t="principle1" style="font-size:12px;color:#4a5a7a;line-height:1.6">Evidence-based ratings — every score is traceable to a source</span>
-        </div>
-        <div style="background:#0c1525;padding:16px 24px;display:flex;align-items:center;gap:12px">
-          <span style="font-size:20px">◈</span>
-          <span data-t="principle2" style="font-size:12px;color:#4a5a7a;line-height:1.6">Independent and non-commercial — no company can buy a better score</span>
-        </div>
-        <div style="background:#0c1525;padding:16px 24px;display:flex;align-items:center;gap:12px">
-          <span style="font-size:20px">◉</span>
-          <span data-t="principle3" style="font-size:12px;color:#4a5a7a;line-height:1.6">Always free — transparency should not be a privilege</span>
+        <div style="background:#111b30;display:flex;flex-direction:column">
+          <div style="padding:28px 24px;flex:1;display:flex;flex-direction:column">
+            <div data-t="missionHowLabel" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">How It Works</div>
+            <p data-t="missionHow" style="font-size:14px;color:#6a7a9a;line-height:1.9;flex:1">Anyone can rate a company and submit evidence. Ratings are evidence-based, not opinion. Every source is public. Proven violations lock the rating. The result is a living record of corporate accountability — built by citizens, for citizens.</p>
+          </div>
+          <div style="padding:16px 24px;display:flex;align-items:center;gap:10px;background:#0c1525;border-top:1px solid #1a2744;min-height:56px">
+            <span style="font-size:16px;flex-shrink:0">◉</span>
+            <span data-t="principle3" style="font-size:11px;color:#4a5a7a;line-height:1.5">Always free — transparency should not be a privilege</span>
+          </div>
         </div>
       </div>
     </div>
@@ -177,7 +179,7 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
     <div id="companies">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
         <h2 data-t="allCompanies" class="serif" style="font-size:22px;font-weight:400">All Companies</h2>
-        <div style="display:flex;gap:8px;align-items:center">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <div style="display:flex;border:1px solid #1a2744;border-radius:2px;overflow:hidden">
             <button id="origin-all" onclick="setOrigin('all')" style="background:#C9A84C1a;border:none;border-right:1px solid #1a2744;padding:7px 12px;font-size:11px;letter-spacing:1px;color:#C9A84C;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">All</button>
             <button id="origin-dk" onclick="setOrigin('dk')" style="background:transparent;border:none;border-right:1px solid #1a2744;padding:7px 12px;font-size:11px;letter-spacing:1px;color:#3a4a6b;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">🇩🇰 Danish</button>
