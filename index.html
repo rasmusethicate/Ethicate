@@ -242,6 +242,40 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
   </footer>
 </div>
 
+<div id="view-profile" style="display:none">
+  <div style="max-width:700px;margin:0 auto;padding:48px 24px">
+    <p style="font-size:10px;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:12px">Your Profile</p>
+    <h1 class="serif" id="profile-name" style="font-size:clamp(26px,4vw,42px);font-weight:300;margin-bottom:4px"></h1>
+    <p id="profile-email" style="font-size:12px;color:#3a4a6b;margin-bottom:36px"></p>
+
+    <!-- Stats row -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#1a2744;border-radius:4px;overflow:hidden;margin-bottom:36px">
+      <div style="background:#0c1525;padding:18px;text-align:center">
+        <div class="serif" id="profile-stat-ratings" style="font-size:32px;font-weight:700;color:#C9A84C;margin-bottom:3px">0</div>
+        <div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Ratings Given</div>
+      </div>
+      <div style="background:#0c1525;padding:18px;text-align:center">
+        <div class="serif" id="profile-stat-sources" style="font-size:32px;font-weight:700;color:#C9A84C;margin-bottom:3px">0</div>
+        <div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Sources Submitted</div>
+      </div>
+      <div style="background:#0c1525;padding:18px;text-align:center">
+        <div class="serif" id="profile-stat-sectors" style="font-size:32px;font-weight:700;color:#C9A84C;margin-bottom:3px">0</div>
+        <div style="font-size:9px;color:#4a5a7a;letter-spacing:2px;text-transform:uppercase">Sectors Covered</div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <p style="font-size:9px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:16px">Achievements</p>
+    <div id="profile-badges" style="display:flex;flex-direction:column;gap:10px;margin-bottom:36px"></div>
+
+    <!-- Recent ratings -->
+    <p style="font-size:9px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:16px">Your Recent Ratings</p>
+    <div id="profile-recent" style="display:flex;flex-direction:column;gap:8px;margin-bottom:36px"></div>
+
+    <button class="ghost-btn" onclick="showHome()" style="padding:10px 24px">← Back to Ethicate</button>
+  </div>
+</div>
+
 <div id="view-auth">
   <div style="display:flex;align-items:center;justify-content:center;min-height:80vh;padding:24px">
     <div style="width:100%;max-width:360px">
@@ -697,7 +731,7 @@ function starsHtml(val, interactive, size) {
 
 // ── View routing ──────────────────────────────────────────────────
 function showView(name) {
-  ["home","company","auth","privacy"].forEach(v => {
+  ["home","company","auth","privacy","profile"].forEach(v => {
     document.getElementById("view-"+v).style.display = "none";
   });
   document.getElementById("view-"+name).style.display = "block";
@@ -809,8 +843,12 @@ function showCompany(co) {
         </div>
       </div>
       <div style="text-align:center;flex-shrink:0">
-        <div class="serif" style="font-size:48px;font-weight:700;color:${col};line-height:1">${ov.toFixed(1)}</div>
-        <div style="font-size:9px;letter-spacing:2px;color:#3a4a6b;text-transform:uppercase">out of 5</div>
+        ${CATS.every(c => ratings[co.id][c.id].seeded)
+          ? `<div class="serif" style="font-size:28px;font-weight:300;color:#2a3a5a;line-height:1;margin-bottom:4px">—</div>
+             <div style="font-size:9px;letter-spacing:2px;color:#2a3a5a;text-transform:uppercase">No ratings yet</div>`
+          : `<div class="serif" style="font-size:48px;font-weight:700;color:${col};line-height:1">${ov.toFixed(1)}</div>
+             <div style="font-size:9px;letter-spacing:2px;color:#3a4a6b;text-transform:uppercase">out of 5</div>`
+        }
       </div>
     </div>
     <div style="height:1px;background:linear-gradient(90deg,transparent,#1e2e4a,transparent);margin-bottom:22px"></div>
@@ -868,9 +906,12 @@ function showCompany(co) {
             <div style="width:28px;height:28px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:${gc}1a;border:1px solid ${gc}33;color:${gc}">${grade}</div>
           </div>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-            ${starsHtml(Math.round(s), false, 14)}
-            <span style="font-size:13px;color:#C9A84C;font-weight:600">${Math.round(s)}</span>
-            <span style="font-size:10px;color:#2a3a5a">${cr[cat.id].count} ratings</span>
+            ${cr[cat.id].seeded
+              ? `<span style="font-size:11px;color:#2a3a5a;font-style:italic">No ratings yet</span>`
+              : `${starsHtml(Math.round(s), false, 14)}
+                 <span style="font-size:13px;color:#C9A84C;font-weight:600">${Math.round(s)}</span>
+                 <span style="font-size:10px;color:#2a3a5a">${cr[cat.id].count} rating${cr[cat.id].count !== 1 ? "s" : ""}</span>`
+            }
           </div>
           ${ur ? `<div style="background:#C9A84C0d;border:1px solid #C9A84C22;border-radius:2px;padding:6px 10px;font-size:10px;color:#C9A84C;margin-bottom:8px">Your rating: ${ur.score} star${ur.score!==1?"s":""}</div>` : ""}
           <button class="ghost-btn" style="width:100%;font-size:10px;margin-bottom:${ur&&ur.url?'8px':'0'}" onclick="openModal(COMPANIES.find(x=>x.id==='${co.id}'), CATS.find(x=>x.id==='${cat.id}'))">${ur ? "Update Rating" : "Rate This"}</button>
@@ -1126,11 +1167,17 @@ function renderGrid() {
           <div class="serif" style="font-size:15px;font-weight:600;line-height:1.3;margin-bottom:2px">${co.name}</div>
           <div style="font-size:10px;color:#5a6a8a">${co.sector}</div>
         </div>
-        <div style="width:34px;height:34px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;background:${c}1a;border:1px solid ${c}33;color:${c}">${g}</div>
+        ${CATS.every(cat => ratings[co.id][cat.id].seeded)
+          ? `<div style="width:34px;height:34px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:#0c1525;border:1px solid #1a2744;color:#2a3a5a">—</div>`
+          : `<div style="width:34px;height:34px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;background:${c}1a;border:1px solid ${c}33;color:${c}">${g}</div>`
+        }
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
-        ${starsHtml(Math.round(ov), false, 13)}
-        <span style="font-size:12px;color:#C9A84C;font-weight:600">${ov.toFixed(1)}</span>
+        ${CATS.every(c => ratings[co.id][c.id].seeded) ? "" : starsHtml(Math.round(ov), false, 13)}
+        ${CATS.every(c => ratings[co.id][c.id].seeded)
+          ? `<span style="font-size:11px;color:#2a3a5a;font-style:italic">No ratings yet</span>`
+          : `<span style="font-size:12px;color:#C9A84C;font-weight:600">${ov.toFixed(1)}</span>`
+        }
         <span style="font-size:10px;color:#2a3a5a;margin-left:auto">${co.hq}</span>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:6px">
@@ -1243,6 +1290,117 @@ function setSector(s) { currentSector = s; currentPage = 1; renderAll(); }
 function changePage(p) { currentPage = p; renderGrid(); window.scrollTo(0,0); }
 function sortChanged() { currentSort = document.getElementById("sort-sel").value; currentPage = 1; renderGrid(); }
 function searchChanged() { currentSearch = document.getElementById("search-inp").value; currentPage = 1; renderGrid(); }
+
+// ── Badge definitions ────────────────────────────────────────────
+const BADGES = [
+  {
+    id: "first_rating",
+    title: "First Voice",
+    desc: "Submitted your first rating on Ethicate.",
+    icon: "◆",
+    color: "#C9A84C",
+    check: (stats) => stats.totalRatings >= 1
+  },
+  {
+    id: "ten_ratings",
+    title: "Active Citizen",
+    desc: "Submitted 10 or more ratings.",
+    icon: "◈",
+    color: "#8BC45A",
+    check: (stats) => stats.totalRatings >= 10
+  },
+  {
+    id: "fifty_ratings",
+    title: "Verified Contributor",
+    desc: "Submitted 50 or more ratings — a significant contribution to corporate transparency.",
+    icon: "◉",
+    color: "#4CAF82",
+    check: (stats) => stats.totalRatings >= 50
+  },
+  {
+    id: "first_source",
+    title: "Evidence Provider",
+    desc: "Submitted a source URL to back up a rating.",
+    icon: "§",
+    color: "#8BC45A",
+    check: (stats) => stats.sourcesSubmitted >= 1
+  },
+  {
+    id: "five_sectors",
+    title: "Sector Analyst",
+    desc: "Rated companies across 5 or more different sectors.",
+    icon: "⬡",
+    color: "#4CAF82",
+    check: (stats) => stats.sectorsRated >= 5
+  },
+];
+
+// ── Profile page ──────────────────────────────────────────────────
+async function showProfile() {
+  if (!user) { showAuth("register"); return; }
+  showView("profile");
+  window.scrollTo(0,0);
+
+  document.getElementById("profile-name").textContent = user.name;
+  document.getElementById("profile-email").textContent = user.email;
+
+  // Load all user ratings with company info
+  const { data: ratingData } = await sb.from("ratings")
+    .select("company_id, category, score, source_url, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (!ratingData) return;
+
+  // Calculate stats
+  const totalRatings = ratingData.length;
+  const sourcesSubmitted = ratingData.filter(r => r.source_url).length;
+  const sectorSet = new Set(ratingData.map(r => {
+    const co = COMPANIES.find(c => c.id === r.company_id);
+    return co ? co.sector : null;
+  }).filter(Boolean));
+  const sectorsRated = sectorSet.size;
+
+  // Update stats
+  document.getElementById("profile-stat-ratings").textContent = totalRatings;
+  document.getElementById("profile-stat-sources").textContent = sourcesSubmitted;
+  document.getElementById("profile-stat-sectors").textContent = sectorsRated;
+
+  // Compute badge eligibility
+  const stats = { totalRatings, sourcesSubmitted, sectorsRated };
+  const badgeContainer = document.getElementById("profile-badges");
+  badgeContainer.innerHTML = BADGES.map(b => {
+    const earned = b.check(stats);
+    return `<div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#0c1525;border:1px solid ${earned ? b.color+"33" : "#1a2744"};border-left:3px solid ${earned ? b.color : "#1a2744"};border-radius:3px;opacity:${earned ? "1" : "0.4"}">
+      <div style="width:36px;height:36px;border-radius:3px;background:${earned ? b.color+"1a" : "#111b30"};border:1px solid ${earned ? b.color+"44" : "#1a2744"};display:flex;align-items:center;justify-content:center;font-size:16px;color:${earned ? b.color : "#2a3a5a"};flex-shrink:0">${b.icon}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;color:${earned ? "#e8eaf2" : "#3a4a6b"};font-weight:500;margin-bottom:3px">${b.title}</div>
+        <div style="font-size:11px;color:${earned ? "#5a6a8a" : "#2a3a5a"};line-height:1.5">${b.desc}</div>
+      </div>
+      <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:${earned ? b.color : "#1a2744"};flex-shrink:0">${earned ? "Earned" : "Locked"}</div>
+    </div>`;
+  }).join("");
+
+  // Recent ratings list
+  const recentContainer = document.getElementById("profile-recent");
+  if (ratingData.length === 0) {
+    recentContainer.innerHTML = `<div style="font-size:13px;color:#2a3a5a;padding:16px;background:#0c1525;border:1px solid #1a2744;border-radius:3px">You haven't submitted any ratings yet. <span style="color:#C9A84C;cursor:pointer" onclick="showHome()">Browse companies →</span></div>`;
+    return;
+  }
+  recentContainer.innerHTML = ratingData.slice(0, 10).map(r => {
+    const co = COMPANIES.find(c => c.id === r.company_id);
+    const cat = CATS.find(c => c.id === r.category);
+    const {c: gc} = getGrade(r.score);
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#0c1525;border:1px solid #1a2744;border-radius:3px;cursor:pointer" onclick="showCompany(COMPANIES.find(x=>x.id==='${r.company_id}'))">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;color:#e8eaf2;margin-bottom:2px">${co ? co.name : r.company_id}</div>
+        <div style="font-size:10px;color:#3a4a6b">${cat ? cat.icon+" "+cat.label : r.category}</div>
+      </div>
+      <div style="display:flex;gap:2px;flex-shrink:0">${[1,2,3,4,5].map(i=>`<svg width="11" height="11" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${i<=r.score?"#C9A84C":"none"}" stroke="${i<=r.score?"#C9A84C":"#2a3a5e"}" stroke-width="1.5"/></svg>`).join("")}</div>
+      ${r.source_url ? `<div style="font-size:9px;color:#4CAF82;letter-spacing:1px;text-transform:uppercase;flex-shrink:0">Source</div>` : ""}
+    </div>`;
+  }).join("");
+}
 
 // ── Delete account ───────────────────────────────────────────────
 function showDeleteModal() {
