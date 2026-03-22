@@ -144,6 +144,11 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
         <h2 data-t="allCompanies" class="serif" style="font-size:22px;font-weight:400">All Companies</h2>
         <div style="display:flex;gap:8px;align-items:center">
+          <div style="display:flex;border:1px solid #1a2744;border-radius:2px;overflow:hidden">
+            <button id="origin-all" onclick="setOrigin('all')" style="background:#C9A84C1a;border:none;border-right:1px solid #1a2744;padding:7px 12px;font-size:11px;letter-spacing:1px;color:#C9A84C;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">All</button>
+            <button id="origin-dk" onclick="setOrigin('dk')" style="background:transparent;border:none;border-right:1px solid #1a2744;padding:7px 12px;font-size:11px;letter-spacing:1px;color:#3a4a6b;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">🇩🇰 Danish</button>
+            <button id="origin-int" onclick="setOrigin('int')" style="background:transparent;border:none;padding:7px 12px;font-size:11px;letter-spacing:1px;color:#3a4a6b;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">🌍 International</button>
+          </div>
           <select id="sort-sel" onchange="sortChanged()" style="background:#111b30;border:1px solid #1a2744;border-radius:2px;padding:7px 10px;color:#e8eaf2;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer">
             <option value="revenue">By Revenue</option>
             <option value="name">By Name</option>
@@ -852,6 +857,7 @@ let currentPage = 1;
 let currentSector = "All";
 let currentSearch = "";
 let currentSort = "revenue";
+let currentOrigin = "all";
 const PG = 24;
 
 // ── Seed ratings (fallback while real ones load) ──────────────────
@@ -1401,7 +1407,12 @@ function renderGrid() {
         <div class="mini-bar"><div style="height:100%;border-radius:2px;background:${scoreColor};width:${((s-1)/4)*100}%"></div></div>
       </div>`;
     }).join("");
-    return `<div class="card" onclick="showCompany(COMPANIES.find(x=>x.id==='${co.id}'))">
+    const isForeign = co.country && co.country !== "DK";
+    return `<div class="card" onclick="showCompany(COMPANIES.find(x=>x.id==='${co.id}'))" style="${isForeign ? "border-left:3px solid #1e3a5a;" : ""}">
+      ${isForeign ? `<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #1a2744">
+        <span style="font-size:16px;line-height:1">${countryFlag(co.country)}</span>
+        <span style="font-size:9px;letter-spacing:2px;color:#3a4a6b;text-transform:uppercase">International</span>
+      </div>` : ""}
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
         <div style="flex:1;min-width:0;padding-right:8px">
           <div class="serif" style="font-size:15px;font-weight:600;line-height:1.3;margin-bottom:2px">${co.name}</div>
@@ -1527,6 +1538,18 @@ function applyTranslations() {
 
 function renderAll() { renderSectors(); renderGrid(); }
 function setSector(s) { currentSector = s; currentPage = 1; renderAll(); }
+function setOrigin(o) {
+  currentOrigin = o;
+  currentPage = 1;
+  ["all","dk","int"].forEach(id => {
+    const btn = document.getElementById("origin-"+id);
+    if (btn) {
+      btn.style.background = id === o ? "#C9A84C1a" : "transparent";
+      btn.style.color = id === o ? "#C9A84C" : "#3a4a6b";
+    }
+  });
+  renderGrid();
+}
 function changePage(p) { currentPage = p; renderGrid(); window.scrollTo(0,0); }
 function sortChanged() { currentSort = document.getElementById("sort-sel").value; currentPage = 1; renderGrid(); }
 function searchChanged() { currentSearch = document.getElementById("search-inp").value; currentPage = 1; renderGrid(); }
