@@ -1195,7 +1195,7 @@ async function doAuth(isLogin) {
       const { data, error } = await sb.auth.signUp({ email, password: pw, options: { data: { name } } });
       if (error) { showToast("Error: " + error.message); btn.textContent = "Create Account"; btn.disabled = false; return; }
       // Insert profile row
-      await sb.from("profiles").insert({ id: data.user.id, name, email });
+      await sb.from("profiles").upsert({ id: data.user.id, name, email }, { onConflict: "id", ignoreDuplicates: true });
       user = { id: data.user.id, email, name };
       showToast("Welcome to Ethicate, " + name + "! Check your email to confirm your account.");
     }
