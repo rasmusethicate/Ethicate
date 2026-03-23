@@ -1529,10 +1529,16 @@ async function submitRating() {
   const key = co.id + "_" + cat.id;
   const prev = userRatings[key];
   const old = ratings[co.id][cat.id];
-  ratings[co.id][cat.id] = {
-    total: prev ? old.total - prev.score + modalStars : old.total + modalStars,
-    count: prev ? old.count : old.count + 1
-  };
+  if (old.seeded) {
+    // Replace seed entirely with first real vote
+    ratings[co.id][cat.id] = {total: modalStars, count: 1};
+  } else if (prev) {
+    // Update existing vote — subtract old score, add new
+    ratings[co.id][cat.id] = {total: old.total - prev.score + modalStars, count: old.count};
+  } else {
+    // New real vote on top of existing real votes
+    ratings[co.id][cat.id] = {total: old.total + modalStars, count: old.count + 1};
+  }
   userRatings[key] = {score: modalStars, url: sourceUrl};
 
   closeModal();
