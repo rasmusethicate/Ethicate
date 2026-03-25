@@ -1767,7 +1767,15 @@ function setOrigin(o) {
   });
   renderGrid();
 }
-function changePage(p) { currentPage = p; renderGrid(); window.scrollTo(0,0); }
+function changePage(p) {
+  currentPage = p;
+  renderGrid();
+  const companiesSection = document.getElementById("companies");
+  if (companiesSection) {
+    const top = companiesSection.getBoundingClientRect().top + window.pageYOffset - 16;
+    window.scrollTo({top, behavior:"smooth"});
+  }
+}
 function sortChanged() { currentSort = document.getElementById("sort-sel").value; currentPage = 1; renderGrid(); }
 function searchChanged() { currentSearch = document.getElementById("search-inp").value; currentPage = 1; renderGrid(); }
 
