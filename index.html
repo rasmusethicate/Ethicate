@@ -761,7 +761,7 @@ const T = {
     ratings: "ratings",
     rating: "rating",
     outOf5: "out of 5",
-    rateThis: "Rate This",
+    rateThis: "Add Rating",
     updateRating: "Update Rating",
     submitEvidence: "⚑ Submit Evidence",
     yourRating: "Your rating",
@@ -861,7 +861,7 @@ const T = {
     ratings: "bedømmelser",
     rating: "bedømmelse",
     outOf5: "ud af 5",
-    rateThis: "Bedøm denne",
+    rateThis: "Tilføj bedømmelse",
     updateRating: "Opdater bedømmelse",
     submitEvidence: "⚑ Indsend bevis",
     yourRating: "Din bedømmelse",
@@ -1334,7 +1334,7 @@ function showCompany(co) {
             }
           </div>
           ${ur ? `<div style="background:#C9A84C0d;border:1px solid #C9A84C22;border-radius:2px;padding:6px 10px;font-size:10px;color:#C9A84C;margin-bottom:8px">Your rating: ${ur.score} star${ur.score!==1?"s":""}</div>` : ""}
-          <button class="ghost-btn" style="width:100%;font-size:10px;margin-bottom:${ur&&ur.url?'8px':'0'}" onclick="openModal(COMPANIES.find(x=>x.id==='${co.id}'), CATS.find(x=>x.id==='${cat.id}'))">${ur ? "Update Rating" : "Rate This"}</button>
+          <button class="ghost-btn" style="width:100%;font-size:10px;margin-bottom:${ur&&ur.url?'8px':'0'}" onclick="openModal(COMPANIES.find(x=>x.id==='${co.id}'), CATS.find(x=>x.id==='${cat.id}'))">${ur ? "Update Rating" : "Add Rating"}</button>
           ${(()=>{
   const srcs = sourceUrls[co.id+"_"+cat.id]||[];
   if (!srcs.length) return "";
@@ -1504,11 +1504,49 @@ function updateModalLabel() {
 function closeModal() {
   document.getElementById("modal").style.display = "none";
   modalState = null;
+  nudgeShown = false;
+  const nudge = document.getElementById("m-nudge");
+  const btn = document.getElementById("m-submit");
+  if (nudge) nudge.style.display = "none";
+  if (btn) btn.style.display = "block";
+}
+
+let nudgeShown = false;
+
+function onUrlInput() {
+  const url = document.getElementById("m-url").value.trim();
+  if (url) {
+    document.getElementById("m-nudge").style.display = "none";
+    nudgeShown = false;
+  }
+}
+
+function addSourceInstead() {
+  document.getElementById("m-nudge").style.display = "none";
+  document.getElementById("m-url").focus();
+  nudgeShown = false;
+}
+
+async function confirmSubmitWithout() {
+  document.getElementById("m-nudge").style.display = "none";
+  nudgeShown = true;
+  await doSubmitRating();
 }
 
 async function submitRating() {
   if (!modalStars) { showToast("Please select a star rating."); return; }
   if (!user) { showAuth("register"); return; }
+  const sourceUrl = document.getElementById("m-url").value.trim();
+  // Show nudge if no URL and not already confirmed
+  if (!sourceUrl && !nudgeShown) {
+    document.getElementById("m-nudge").style.display = "block";
+    document.getElementById("m-submit").style.display = "none";
+    return;
+  }
+  await doSubmitRating();
+}
+
+async function doSubmitRating() {
   const {co, cat} = modalState;
   const sourceUrl = document.getElementById("m-url").value.trim();
   const btn = document.getElementById("m-submit");
@@ -1543,6 +1581,9 @@ async function submitRating() {
   }
   userRatings[key] = {score: modalStars, url: sourceUrl};
 
+  nudgeShown = false;
+  document.getElementById("m-nudge").style.display = "none";
+  document.getElementById("m-submit").style.display = "block";
   closeModal();
   showToast("Rating saved — thank you!");
   showCompany(co);
