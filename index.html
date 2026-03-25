@@ -402,6 +402,36 @@ footer{border-top:1px solid #1a2744;padding:22px 32px;display:flex;justify-conte
   </div>
 </div>
 
+<!-- Challenge Modal -->
+<div id="challenge-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeChallengeModal()">
+  <div class="modal-box" style="max-width:440px">
+    <button onclick="closeChallengeModal()" style="position:absolute;top:10px;right:14px;background:none;border:none;color:#3a4a6b;font-size:20px;cursor:pointer">×</button>
+    <p id="cm-company" style="font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:4px"></p>
+    <h2 id="cm-cat" class="serif" style="font-size:20px;font-weight:400;margin-bottom:6px"></h2>
+    <p style="font-size:13px;color:#8a9ab8;line-height:1.7;margin-bottom:18px">Do you agree or disagree with the current rating for this category? You can support it or challenge it — optionally with a source URL as evidence.</p>
+
+    <div style="display:flex;gap:8px;margin-bottom:18px">
+      <button id="cm-support-btn" onclick="selectChallengeType('support')" style="flex:1;padding:12px;border-radius:2px;border:1px solid #4CAF8244;background:#4CAF820d;color:#4CAF82;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;opacity:0.5">
+        ↑ Support
+      </button>
+      <button id="cm-challenge-btn" onclick="selectChallengeType('challenge')" style="flex:1;padding:12px;border-radius:2px;border:1px solid #D94F4F44;background:#D94F4F0d;color:#D94F4F;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;opacity:0.5">
+        ↓ Challenge
+      </button>
+    </div>
+
+    <div id="cm-type-desc" style="font-size:12px;color:#4a5a7a;margin-bottom:14px;min-height:18px;line-height:1.6"></div>
+
+    <p style="font-size:10px;letter-spacing:2px;color:#6a7a9a;text-transform:uppercase;margin-bottom:6px">Source URL <span style="color:#6a7a9a;letter-spacing:0;text-transform:none">— optional but encouraged</span></p>
+    <input class="ipt" id="cm-url" placeholder="https://example.com/article" style="margin-bottom:14px"/>
+
+    <div style="background:#0c1525;border:1px solid #1a2744;border-radius:3px;padding:10px 14px;margin-bottom:16px">
+      <p style="font-size:11px;color:#4a5a7a;line-height:1.6">Your submission will be shown publicly alongside the existing sources for this category. If you are challenging the current rating, your source will be flagged for admin review.</p>
+    </div>
+
+    <button class="gold-btn" id="cm-submit" style="width:100%;padding:12px" onclick="submitChallenge()">Submit</button>
+  </div>
+</div>
+
 <!-- Flag / Evidence Modal -->
 <div id="flag-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeFlagModal()">
   <div class="modal-box">
@@ -973,6 +1003,7 @@ seedRatings();
 // ── Store source URLs per company+category ────────────────────────
 let sourceUrls = {}; // key: companyId_catId → array of {url, score}
 let allSources = []; // flat list of all sources for the sources page
+let challenges = {}; // key: companyId_catId → {support: N, challenge: N, urls: [{url, type}]}
 
 // ── Load real ratings from Supabase ──────────────────────────────
 async function loadRatings() {
@@ -1008,6 +1039,19 @@ async function loadRatings() {
     }
   });
   renderGrid();
+}
+
+// ── Load challenges ──────────────────────────────────────────────
+async function loadChallenges() {
+  const { data, error } = await sb.from("challenges").select("company_id, category, challenge_type, source_url");
+  if (error || !data) return;
+  challenges = {};
+  data.forEach(row => {
+    const key = row.company_id + "_" + row.category;
+    if (!challenges[key]) challenges[key] = {support: 0, challenge: 0, urls: []};
+    challenges[key][row.challenge_type]++;
+    if (row.source_url) challenges[key].urls.push({url: row.source_url, type: row.challenge_type});
+  });
 }
 
 // ── Load approved flags ──────────────────────────────────────────
@@ -1341,8 +1385,9 @@ function showCompany(co) {
           <button class="ghost-btn" style="width:100%;font-size:10px;margin-bottom:${ur&&ur.url?'8px':'0'}" onclick="openModal(COMPANIES.find(x=>x.id==='${co.id}'), CATS.find(x=>x.id==='${cat.id}'))">${ur ? "Update Rating" : "Add Rating"}</button>
           ${(()=>{
   const srcs = sourceUrls[co.id+"_"+cat.id]||[];
-  if (!srcs.length) return "";
-  const {c: gc} = getGrade(srcs[0].score||3);
+  const ch = challenges[co.id+"_"+cat.id];
+  const chUrls = ch ? ch.urls : [];
+  if (!srcs.length && !chUrls.length) return "";
   return `<div style="margin-top:6px">
     <div style="font-size:9px;letter-spacing:1.5px;color:#2a3a4a;text-transform:uppercase;margin-bottom:5px">Sources</div>
     ${srcs.map(s=>{
@@ -1355,6 +1400,10 @@ function showCompany(co) {
         <a href="${s.url}" target="_blank" rel="noopener noreferrer" style="font-size:10px;color:#C9A84C;word-break:break-all;line-height:1.5">${s.url}</a>
       </div>`;
     }).join("")}
+    ${chUrls.map(c=>`<div style="margin-bottom:6px;padding:6px 8px;background:#0a1020;border-radius:2px;border:1px solid ${c.type==="support"?"#4CAF8233":"#D94F4F33"}">
+      <div style="font-size:9px;letter-spacing:1px;color:${c.type==="support"?"#4CAF82":"#D94F4F"};text-transform:uppercase;margin-bottom:4px">${c.type==="support"?"↑ Supporting source":"↓ Challenging source"}</div>
+      <a href="${c.url}" target="_blank" rel="noopener noreferrer" style="font-size:10px;color:#C9A84C;word-break:break-all;line-height:1.5">${c.url}</a>
+    </div>`).join("")}
   </div>`;
 })()}
         </div>`;
@@ -1964,6 +2013,70 @@ async function confirmDeleteAccount() {
   showToast("Your account and all data has been permanently deleted.");
 }
 
+// ── Challenge modal ──────────────────────────────────────────────
+let challengeState = null;
+let selectedChallengeType = null;
+
+function openChallengeModal(coId, catId, coName, catLabel, preselect) {
+  challengeState = { coId, catId };
+  selectedChallengeType = null;
+  document.getElementById("cm-company").textContent = coName;
+  document.getElementById("cm-cat").textContent = catLabel;
+  document.getElementById("cm-url").value = "";
+  document.getElementById("cm-type-desc").textContent = "";
+  document.getElementById("cm-support-btn").style.opacity = "0.5";
+  document.getElementById("cm-challenge-btn").style.opacity = "0.5";
+  document.getElementById("challenge-modal").style.display = "flex";
+  if (preselect) selectChallengeType(preselect);
+}
+
+function selectChallengeType(type) {
+  selectedChallengeType = type;
+  document.getElementById("cm-support-btn").style.opacity = type === "support" ? "1" : "0.5";
+  document.getElementById("cm-challenge-btn").style.opacity = type === "challenge" ? "1" : "0.5";
+  document.getElementById("cm-type-desc").textContent = type === "support"
+    ? "You agree with the current rating. A source URL strengthens your support."
+    : "You believe the current rating is inaccurate. Please provide a source URL to back your challenge — it will be flagged for admin review.";
+}
+
+function closeChallengeModal() {
+  document.getElementById("challenge-modal").style.display = "none";
+  challengeState = null;
+  selectedChallengeType = null;
+}
+
+async function submitChallenge() {
+  if (!selectedChallengeType) { showToast("Please select Support or Challenge."); return; }
+  const url = document.getElementById("cm-url").value.trim();
+  const btn = document.getElementById("cm-submit");
+  btn.textContent = "Submitting…"; btn.disabled = true;
+
+  const { error } = await sb.from("challenges").insert({
+    company_id: challengeState.coId,
+    category: challengeState.catId,
+    challenge_type: selectedChallengeType,
+    source_url: url || null
+  });
+
+  btn.textContent = "Submit"; btn.disabled = false;
+
+  if (error) { showToast("Error submitting: " + error.message); return; }
+
+  // Update local state immediately
+  const key = challengeState.coId + "_" + challengeState.catId;
+  if (!challenges[key]) challenges[key] = {support: 0, challenge: 0, urls: []};
+  challenges[key][selectedChallengeType]++;
+  if (url) challenges[key].urls.push({url, type: selectedChallengeType});
+
+  closeChallengeModal();
+  showToast(selectedChallengeType === "support"
+    ? "Support registered — thank you!"
+    : "Challenge submitted — it will be reviewed shortly.");
+
+  // Refresh company view
+  if (activeCo) showCompany(activeCo);
+}
+
 // ── Flag modal ────────────────────────────────────────────────────
 let flagState = null;
 let selectedFlagType = null;
@@ -2030,9 +2143,10 @@ async function init() {
     updateNav();
     await loadUserRatings();
   }
-  // Load real ratings and flags from database
+  // Load real ratings, flags and challenges from database
   await loadFlags();
   await loadRatings();
+  await loadChallenges();
 }
 
 init();
