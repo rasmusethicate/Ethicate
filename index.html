@@ -126,7 +126,7 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
     <div style="text-align:center;margin-bottom:48px;padding:80px 24px 64px;">
       <p data-t="tagline" style="font-size:10px;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:14px">Denmark's Corporate Ethics Monitor</p>
       <h1 data-t="hero" class="serif" style="font-size:clamp(36px,6vw,68px);font-weight:300;line-height:1.1;margin-bottom:14px">Hold Companies<br><em style="color:#C9A84C">Accountable.</em></h1>
-      <p data-t="heroSub" style="font-size:15px;color:#a8b8c8;max-width:460px;margin:0 auto 24px;line-height:1.8">Rate 500 Danish and international companies operating in Denmark — on ethics, environment, human rights, legal compliance, tax, animal welfare, data privacy, and social responsibility.</p>
+      <p data-t="heroSub" style="font-size:15px;color:#a8b8c8;max-width:460px;margin:0 auto 24px;line-height:1.8">Rate Danish and international companies operating in Denmark — on ethics, environment, human rights, legal compliance, tax, animal welfare, data privacy, and social responsibility.</p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:32px">
         <button data-t="startRating" class="gold-btn" style="padding:11px 28px" onclick="showAuth('register')">Start Rating</button>
         <button data-t="browseCompanies" class="ghost-btn" onclick="document.getElementById('companies').scrollIntoView({behavior:'smooth'})">Browse Companies</button>
@@ -219,6 +219,7 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
       <span data-t="footerSub" style="font-size:10px;color:#485878">530+ companies · Citizen-powered · Independent</span>
       <span style="font-size:10px;color:#7888a8;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showSources()">Sources</span>
       <span data-t="privacyPolicy" style="font-size:10px;color:#7888a8;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showPrivacy()">Privacy Policy</span>
+      <span id="footer-delete-btn" style="display:none;font-size:10px;color:#6a5a5a;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showDeleteModal()">Delete Account</span>
     </div>
   </footer>
 </div>
@@ -799,7 +800,7 @@ const T = {
     tagline: "Denmark's Corporate Ethics Monitor",
     hero1: "Hold Companies",
     hero2: "Accountable.",
-    heroSub: "Rate 530+ Danish and international companies operating in Denmark — on ethics, environment, human rights, legal compliance, tax, animal welfare, data privacy, and social responsibility.",
+    heroSub: "Rate Danish and international companies operating in Denmark — on ethics, environment, human rights, legal compliance, tax, animal welfare, data privacy, and social responsibility.",
     startRating: "Start Rating",
     browseCompanies: "Browse Companies",
     statCompanies: "Companies",
@@ -899,7 +900,7 @@ const T = {
     tagline: "Danmarks Virksomhedsetiske Monitor",
     hero1: "Stil virksomheder til",
     hero2: "Ansvar.",
-    heroSub: "Bedøm 530+ danske og internationale virksomheder, der opererer i Danmark — inden for etik, miljø, menneskerettigheder, lovoverholdelse, skat, dyrevelfærd, databeskyttelse og socialt ansvar.",
+    heroSub: "Bedøm danske og internationale virksomheder, der opererer i Danmark — inden for etik, miljø, menneskerettigheder, lovoverholdelse, skat, dyrevelfærd, databeskyttelse og socialt ansvar.",
     startRating: "Bedøm nu",
     browseCompanies: "Se virksomheder",
     statCompanies: "Virksomheder",
