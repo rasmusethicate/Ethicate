@@ -448,6 +448,16 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
   </div>
 </div>
 
+<!-- Thank You Modal -->
+<div id="thankyou-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeThankyouModal()">
+  <div class="modal-box" style="max-width:400px;text-align:center;padding:40px 32px">
+    <div style="font-size:36px;margin-bottom:16px">✦</div>
+    <h2 class="serif" style="font-size:26px;font-weight:400;color:#C9A84C;margin-bottom:12px">Thank you</h2>
+    <p id="ty-msg" style="font-size:14px;color:#a8b8c8;line-height:1.8;margin-bottom:28px">Your rating has been recorded. Every voice helps hold companies to a higher standard.</p>
+    <button class="gold-btn" style="width:100%;padding:12px" onclick="closeThankyouModal()">Continue</button>
+  </div>
+</div>
+
 <!-- Flag / Evidence Modal -->
 <div id="flag-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeFlagModal()">
   <div class="modal-box">
@@ -1197,7 +1207,7 @@ function showView(name) {
   document.getElementById("view-"+name).style.display = "block";
 }
 
-function showPrivacy() { showView("privacy"); window.scrollTo(0,0); }
+function showPrivacy() { showView("privacy"); window.scrollTo(0,0); history.pushState({view: "privacy"}, "", "/?page=privacy"); }
 
 function showSources() {
   showView("sources");
@@ -1274,6 +1284,9 @@ function renderSourcesPage() {
 function showHome() {
   showView("home");
   renderAll();
+  if (history.state?.view !== "home") {
+    history.pushState({view: "home"}, "", "/");
+  }
 }
 
 // ── Auth ──────────────────────────────────────────────────────────
@@ -1349,6 +1362,7 @@ async function signOut() {
 function showCompany(co) {
   activeCo = co;
   showView("company");
+  history.pushState({view: "company", coId: co.id}, "", "/?company=" + co.id);
   const cr = ratings[co.id];
   // Build lockedScores for this company
   lockedScores = {};
@@ -1713,8 +1727,19 @@ async function doSubmitRating() {
   document.getElementById("m-nudge").style.display = "none";
   document.getElementById("m-submit").style.display = "block";
   closeModal();
-  showToast("Rating saved — thank you!");
+
+  // Show thank-you modal with personalised message
+  const isFirst = Object.keys(userRatings).length === 1;
+  const tyMsg = isFirst
+    ? "Your first rating has been recorded. Every voice helps hold companies to a higher standard — thank you for adding yours."
+    : "Your rating has been recorded. Every voice helps hold companies to a higher standard.";
+  document.getElementById("ty-msg").textContent = tyMsg;
+  document.getElementById("thankyou-modal").style.display = "flex";
   showCompany(co);
+}
+
+function closeThankyouModal() {
+  document.getElementById("thankyou-modal").style.display = "none";
 }
 
 function showToast(msg) {
@@ -1947,7 +1972,15 @@ function changePage(p) {
   }
 }
 function sortChanged() { currentSort = document.getElementById("sort-sel").value; currentPage = 1; renderGrid(); }
-function searchChanged() { currentSearch = document.getElementById("search-inp").value; currentPage = 1; renderGrid(); }
+function searchChanged() {
+  currentSearch = document.getElementById("search-inp").value;
+  currentPage = 1;
+  renderGrid();
+  if (currentSearch.length > 0) {
+    const grid = document.getElementById("companies");
+    if (grid) grid.scrollIntoView({behavior: "smooth", block: "start"});
+  }
+}
 
 // ── Badge definitions ────────────────────────────────────────────
 const BADGES = [
@@ -2207,10 +2240,28 @@ async function submitFlag() {
   showToast("Evidence submitted — thank you. It will be reviewed shortly.");
 }
 
+// ── Browser back/forward button ──────────────────────────────────
+window.addEventListener("popstate", function(e) {
+  const state = e.state;
+  if (!state || state.view === "home") {
+    showView("home");
+    renderAll();
+  } else if (state.view === "company" && state.coId) {
+    const co = COMPANIES.find(x => x.id === state.coId);
+    if (co) { activeCo = co; showView("company"); showCompany(co); }
+    else { showView("home"); renderAll(); }
+  } else if (state.view === "privacy") {
+    showView("privacy"); window.scrollTo(0,0);
+  } else {
+    showView("home"); renderAll();
+  }
+});
+
 // ── Session restore on page load ──────────────────────────────────
 async function init() {
    renderGuide();
   showHome();
+  history.replaceState({view: "home"}, "", "/");
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     const u = session.user;
