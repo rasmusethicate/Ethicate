@@ -166,7 +166,7 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
       </div>
       <div style="max-width:560px;margin:0 auto;position:relative;z-index:100">
         <svg style="position:absolute;left:18px;top:18px;pointer-events:none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7888a8" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="search-inp" data-t="searchPlaceholder" autocomplete="new-password" name="company-search" type="search" style="width:100%;background:#1e2d3d;border:1px solid #3a5070;border-radius:4px;padding:16px 18px 16px 48px;color:#f0f2fa;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s;box-shadow:0 4px 20px rgba(0,0,0,0.2)" placeholder="Search companies, sectors or CVR…" oninput="searchChanged()" onfocus="showDropdown()" onblur="setTimeout(hideDropdown,200)" />
+        <input id="search-inp" data-t="searchPlaceholder" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="ethicate-search-x7k" type="text" style="width:100%;background:#1e2d3d;border:1px solid #3a5070;border-radius:4px;padding:16px 18px 16px 48px;color:#f0f2fa;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s;box-shadow:0 4px 20px rgba(0,0,0,0.2)" placeholder="Search companies, sectors or CVR…" oninput="searchChanged()" onfocus="showDropdown()" onblur="setTimeout(hideDropdown,200)" />
         <div id="search-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#1e2d3d;border:1px solid #C9A84C44;border-radius:4px;box-shadow:0 12px 40px rgba(0,0,0,0.4);max-height:360px;overflow-y:auto;z-index:200"></div>
       </div>
     </div>
@@ -820,17 +820,17 @@ const COMPANIES = RAW.map(r => ({id:r[0],name:r[1],sector:SECTOR_NAMES[r[2]],hq:
 
 const CATS = [
   {id:"work",  label:"Work Environment",      icon:"⚖", desc:"Employee rights, wages, safety",
-   tooltip:"Covers how the company treats its employees — including fair wages, working hours, workplace safety, union rights, whistleblower protections, and whether it has faced strikes, scandals, or labour violations. A high score means employees are well treated and protected; a low score indicates exploitation, unsafe conditions, or suppression of worker rights."},
+   tooltip:"Covers how the company treats the people who directly work for it in Denmark — including fair wages, working hours, physical safety, union rights, sick leave, whistleblower protections, and whether it upholds Danish collective agreements (overenskomster). Rate this based on the direct employment experience of Danish employees or documented labour violations in Denmark. For global supply chain abuses or migrant worker exploitation abroad, use Human Rights instead."},
   {id:"env",   label:"Environmental Impact",  icon:"🌿", desc:"Carbon footprint, waste, sustainability",
    tooltip:"Evaluates the company's impact on the natural environment — including CO₂ emissions, waste management, water usage, pollution, use of renewable energy, and sustainability reporting. Considers both direct operations and supply chain impact. A high score means the company is actively reducing its footprint; a low score means it causes significant environmental harm with little accountability."},
   {id:"human", label:"Human Rights",          icon:"✊", desc:"Supply chain ethics, equality",
-   tooltip:"Assesses whether the company respects human rights across its entire value chain — including its own workforce, suppliers, and business partners. Covers issues like child labour, forced labour, discrimination, gender equality, and sourcing from conflict regions. A high score means the company actively audits and enforces ethical standards; a low score indicates documented abuses or wilful ignorance of supply chain conditions."},
+   tooltip:"Assesses whether the company respects fundamental human rights across its entire global value chain — including suppliers, subcontractors, and migrant workers abroad. Covers child labour, forced labour, exploitation of migrant workers tied to employer visas, discrimination, gender equality, and sourcing from conflict regions. Particularly relevant for companies that outsource labour globally or source from high-risk regions. Use this category — not Work Environment — when the concern is about people outside Denmark or in the global supply chain."},
   {id:"legal", label:"Legal Compliance",      icon:"§",  desc:"Regulatory adherence, governance",
    tooltip:"Looks at the company's track record with laws, regulations, and corporate governance standards — including fines, sanctions, criminal investigations, data privacy breaches, anti-competitive behaviour, and board accountability. A high score means clean compliance and strong governance; a low score means repeated violations, regulatory battles, or weak internal controls."},
   {id:"tax",   label:"Tax & Finance",         icon:"◈",  desc:"Tax transparency, fair contribution",
    tooltip:"Examines whether the company pays a fair share of taxes and operates with financial transparency — including use of tax havens, aggressive tax planning, transfer pricing, and willingness to disclose financial data. Considers both legality and moral responsibility. A high score means the company contributes fairly to the societies it operates in; a low score means it systematically minimises its tax burden at the expense of public services."},
   {id:"social",label:"Social Responsibility", icon:"◉", desc:"Community investment, philanthropy",
-   tooltip:"Measures the company's positive contribution to society beyond its core business — including community investment, charitable giving, support for education and culture, responsible marketing, and how it handles crises affecting the public. A high score means the company actively gives back and behaves as a responsible corporate citizen; a low score means it prioritises profit with little regard for broader societal impact."},
+   tooltip:"Measures whether the company contributes positively to the society it operates in — beyond what it is legally required to do. Covers community investment, charitable giving, support for vulnerable groups, responsible marketing, inclusion programmes, and how it treats the communities whose public institutions (schools, hospitals, infrastructure) it serves through contracts. Ask: does this company make Danish society better or just extract value from it? Not the same as Work Environment (individual employees) or Human Rights (global supply chain) — Social Responsibility is about the company's relationship with society as a whole."},
   {id:"animal",label:"Animal Welfare", icon:"🐾", desc:"Treatment of animals in operations and supply chain",
    tooltip:"Evaluates how the company treats animals under its direct control or within its supply chain — including livestock conditions, use of animal testing, sourcing from certified welfare schemes, and compliance with Danish and EU animal welfare law. Particularly relevant for food, agriculture, pharmaceutical, and cosmetics companies. A high score means welfare is a genuine priority with verified standards; a low score means documented cruelty, negligence, or systematic disregard for animal suffering."},
   {id:"privacy",label:"Data Privacy", icon:"🔒", desc:"GDPR compliance, data handling, cybersecurity",
@@ -2382,7 +2382,10 @@ window.addEventListener("hashchange", function() {
 
 // ── Session restore on page load ──────────────────────────────────
 async function init() {
-   renderGuide();
+  // Prevent browser autofill from injecting email into search box
+  const si = document.getElementById("search-inp");
+  if (si) { si.value = ""; setTimeout(() => { si.value = ""; }, 100); }
+  renderGuide();
   showHome();
   if (!location.hash) location.hash = "home";
   const { data: { session } } = await sb.auth.getSession();
