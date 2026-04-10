@@ -231,7 +231,17 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
           <select id="sort-sel" onchange="sortChanged()" style="background:#16202e;border:1px solid #3a5070;border-radius:2px;padding:7px 10px;color:#f0f2fa;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer">
             <option value="revenue">By Revenue</option>
             <option value="name">By Name</option>
-            <option value="rating">By Rating</option>
+            <option value="rating">By Overall Rating</option>
+            <optgroup label="── By Category ──" style="color:#7888a8">
+            <option value="cat_work">Work Environment</option>
+            <option value="cat_env">Environment</option>
+            <option value="cat_human">Human Rights</option>
+            <option value="cat_legal">Legal</option>
+            <option value="cat_tax">Tax & Finance</option>
+            <option value="cat_social">Social Responsibility</option>
+            <option value="cat_animal">Animal Welfare</option>
+            <option value="cat_privacy">Data Privacy</option>
+            </optgroup>
           </select>
 
         </div>
@@ -1790,9 +1800,31 @@ function getFiltered() {
      (c.cvr && c.cvr.includes(currentSearch)) ||
      (c.country && c.country.toLowerCase().includes(currentSearch.toLowerCase())))
   );
-  if (currentSort === "revenue") list.sort((a,b) => b.rev - a.rev);
-  else if (currentSort === "name") list.sort((a,b) => a.name.localeCompare(b.name));
-  else list.sort((a,b) => getOverallForCo(b.id) - getOverallForCo(a.id));
+  if (currentSort === "revenue") {
+    list.sort((a,b) => b.rev - a.rev);
+  } else if (currentSort === "name") {
+    list.sort((a,b) => a.name.localeCompare(b.name));
+  } else if (currentSort === "rating") {
+    list.sort((a,b) => getOverallForCo(b.id) - getOverallForCo(a.id));
+  } else if (currentSort.startsWith("cat_")) {
+    const catId = currentSort.replace("cat_", "");
+    list.sort((a,b) => {
+      const getScore = (coId) => {
+        const fk = coId + "_" + catId;
+        if (approvedFlags[fk] === "violation") return 1;
+        if (approvedFlags[fk] === "frontrunner") return 5;
+        const cr = ratings[coId]?.[catId];
+        if (!cr || cr.seeded) return 0;
+        return cr.total / cr.count;
+      };
+      const sa = getScore(a.id), sb = getScore(b.id);
+      // Put unrated (0) at the end
+      if (sa === 0 && sb === 0) return 0;
+      if (sa === 0) return 1;
+      if (sb === 0) return -1;
+      return sb - sa;
+    });
+  }
   return list;
 }
 
