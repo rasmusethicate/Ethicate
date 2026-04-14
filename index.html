@@ -2593,7 +2593,7 @@ function renderRecentActivity() {
     const co = COMPANIES.find(c => c.id === r.company_id);
     const cat = CATS.find(c => c.id === r.category);
     return co && cat;
-  }).slice(0, 8);
+  }).slice(0, 6);
   if (valid.length < 3) { wrap.style.display = "none"; return; }
 
   const stars = s => "★".repeat(s) + "☆".repeat(5-s);
