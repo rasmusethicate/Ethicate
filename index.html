@@ -228,7 +228,8 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
             <button id="origin-dk" onclick="setOrigin('dk')" style="background:transparent;border:none;border-right:1px solid #1a2744;padding:7px 12px;font-size:11px;letter-spacing:1px;color:#7888a8;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">🇩🇰 Danish</button>
             <button id="origin-int" onclick="setOrigin('int')" style="background:transparent;border:none;padding:7px 12px;font-size:11px;letter-spacing:1px;color:#7888a8;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">🌍 International</button>
           </div>
-          <select id="sort-sel" onchange="sortChanged()" style="background:#16202e;border:1px solid #3a5070;border-radius:2px;padding:7px 10px;color:#f0f2fa;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer">
+          <button onclick="showCompare()" style="background:#1e2d3d;border:1px solid #3a5070;border-radius:2px;padding:7px 12px;color:#a8b8c8;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap" data-t="compareBtn">⇄ Compare</button>
+            <select id="sort-sel" onchange="sortChanged()" style="background:#16202e;border:1px solid #3a5070;border-radius:2px;padding:7px 10px;color:#f0f2fa;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer">
             <option value="revenue">By Revenue</option>
             <option value="name">By Name</option>
             <option value="rating">By Overall Rating</option>
@@ -250,6 +251,7 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
         <div id="sector-btns" style="display:flex;gap:4px;flex-wrap:wrap"></div>
       </div>
       <p id="count-label" style="font-size:12px;color:#7888a8;margin-bottom:14px"></p>
+      <div id="recently-rated" style="margin-bottom:22px;display:none"></div>
       <div id="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px;margin-bottom:22px"></div>
       <div id="pagination" style="display:flex;justify-content:center;gap:4px;flex-wrap:wrap"></div>
     </div>
@@ -268,6 +270,27 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
   </footer>
 </div>
 
+<div id="view-compare" style="display:none">
+  <div style="max-width:860px;margin:0 auto;padding:36px 24px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px">
+      <button onclick="showHome()" style="background:none;border:none;color:#7888a8;cursor:pointer;font-size:18px;padding:0">←</button>
+      <h1 class="serif" style="font-size:26px;font-weight:400" data-t="compareTitle">Compare Companies</h1>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+      <div>
+        <p style="font-size:10px;letter-spacing:2px;color:#7888a8;text-transform:uppercase;margin-bottom:8px">Company A</p>
+        <input id="cmp-a-inp" type="text" autocomplete="off" placeholder="Search company…" class="ipt" oninput="cmpSearch('a')" onfocus="cmpSearch('a')" onblur="setTimeout(()=>document.getElementById('cmp-a-drop').style.display='none',200)" style="width:100%;box-sizing:border-box"/>
+        <div id="cmp-a-drop" style="display:none;background:#1e2d3d;border:1px solid #C9A84C44;border-radius:4px;max-height:200px;overflow-y:auto;margin-top:2px;z-index:100;position:relative"></div>
+      </div>
+      <div>
+        <p style="font-size:10px;letter-spacing:2px;color:#7888a8;text-transform:uppercase;margin-bottom:8px">Company B</p>
+        <input id="cmp-b-inp" type="text" autocomplete="off" placeholder="Search company…" class="ipt" oninput="cmpSearch('b')" onfocus="cmpSearch('b')" onblur="setTimeout(()=>document.getElementById('cmp-b-drop').style.display='none',200)" style="width:100%;box-sizing:border-box"/>
+        <div id="cmp-b-drop" style="display:none;background:#1e2d3d;border:1px solid #C9A84C44;border-radius:4px;max-height:200px;overflow-y:auto;margin-top:2px;z-index:100;position:relative"></div>
+      </div>
+    </div>
+    <div id="cmp-result"></div>
+  </div>
+</div>
 <div id="view-company">
   <div style="max-width:820px;margin:0 auto;padding:36px 24px" id="company-content"></div>
 </div>
@@ -539,6 +562,17 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
   </div>
 </div>
 
+<div id="guest-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;display:none;align-items:center;justify-content:center" onclick="if(event.target===this)closeGuestModal()">
+  <div style="background:#1e2d3d;border:1px solid #C9A84C44;border-radius:6px;padding:32px;max-width:420px;width:90%;position:relative;text-align:center">
+    <button onclick="closeGuestModal()" style="position:absolute;top:10px;right:14px;background:none;border:none;color:#7888a8;font-size:20px;cursor:pointer">×</button>
+    <div style="font-size:32px;margin-bottom:12px">⭐</div>
+    <h2 class="serif" style="font-size:22px;font-weight:400;margin-bottom:8px">Your rating is ready</h2>
+    <p style="font-size:13px;color:#a8b8c8;line-height:1.7;margin-bottom:24px">Create a free account to publish it. It takes 30 seconds — no spam, no cost, ever.</p>
+    <button class="gold-btn" style="width:100%;padding:12px;margin-bottom:10px" onclick="closeGuestModal();showAuth('register')">Create free account & publish</button>
+    <button onclick="closeGuestModal();showAuth('login')" style="background:none;border:1px solid #3a5070;border-radius:3px;width:100%;padding:10px;color:#a8b8c8;font-size:13px;cursor:pointer">Sign in</button>
+    <p style="font-size:11px;color:#7888a8;margin-top:14px">Your rating is saved and will publish automatically after sign-up.</p>
+  </div>
+</div>
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ── Supabase ──────────────────────────────────────────────────────
@@ -1195,6 +1229,44 @@ function getOverallForCo(coId) {
   const cr = ratings[coId];
   return CATS.map(c => getCatScore(cr, c.id)).reduce((a,b)=>a+b,0) / CATS.length;
 }
+
+function getSectorAvg(sector, catId) {
+  // Returns average score for a sector/category, excluding seeded-only companies
+  const peers = COMPANIES.filter(c => c.sector === sector);
+  const scores = peers.map(c => {
+    const key = c.id + "_" + (catId || "overall");
+    if (catId) {
+      const fk = c.id + "_" + catId;
+      if (approvedFlags[fk] === "violation") return 1;
+      if (approvedFlags[fk] === "frontrunner") return 5;
+      const r = ratings[c.id]?.[catId];
+      if (!r || r.seeded) return null;
+      return r.total / r.count;
+    } else {
+      const cr = ratings[c.id];
+      if (!cr) return null;
+      const allSeeded = CATS.every(cat => cr[cat.id]?.seeded);
+      if (allSeeded) return null;
+      return getOverallForCo(c.id);
+    }
+  }).filter(s => s !== null);
+  if (scores.length < 2) return null; // need at least 2 companies to be meaningful
+  return scores.reduce((a,b) => a+b, 0) / scores.length;
+}
+
+function getSectorRank(coId, sector) {
+  // Returns {rank, total} for a company within its sector by overall score
+  const peers = COMPANIES.filter(c => c.sector === sector);
+  const scored = peers
+    .map(c => ({ id: c.id, s: getOverallForCo(c.id) }))
+    .filter(c => {
+      const cr = ratings[c.id];
+      return cr && !CATS.every(cat => cr[cat.id]?.seeded);
+    })
+    .sort((a,b) => b.s - a.s);
+  const rank = scored.findIndex(c => c.id === coId) + 1;
+  return { rank: rank || null, total: scored.length };
+}
 function getGrade(s) {
   if (s>=4.5) return {g:"A+",c:"#4CAF82"};
   if (s>=4.0) return {g:"A", c:"#4CAF82"};
@@ -1225,7 +1297,7 @@ function starsHtml(val, interactive, size) {
 
 // ── View routing ──────────────────────────────────────────────────
 function showView(name) {
-  ["home","company","auth","privacy","profile","sources"].forEach(v => {
+  ["home","company","auth","privacy","profile","sources","compare"].forEach(v => {
     document.getElementById("view-"+v).style.display = "none";
   });
   document.getElementById("view-"+name).style.display = "block";
@@ -1341,12 +1413,14 @@ async function doAuth(isLogin) {
       const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
       if (error) { showToast("Error: " + error.message); btn.textContent = "Sign In"; btn.disabled = false; return; }
       user = { id: data.user.id, email: data.user.email, name: data.user.user_metadata?.name || email.split("@")[0] };
+      await flushPendingRating();
     } else {
       const { data, error } = await sb.auth.signUp({ email, password: pw, options: { data: { name } } });
       if (error) { showToast("Error: " + error.message); btn.textContent = "Create Account"; btn.disabled = false; return; }
       // Insert profile row
       await sb.from("profiles").upsert({ id: data.user.id, name, email }, { onConflict: "id", ignoreDuplicates: true });
       user = { id: data.user.id, email, name };
+      await flushPendingRating();
       showToast("Welcome to Ethicate, " + name + "! Check your email to confirm your account.");
     }
     await loadUserRatings();
@@ -1461,6 +1535,61 @@ function showCompany(co) {
         </div>`).join("")}
       </div>
     </div>
+    ${(()=>{
+      const sectorOvg = getSectorAvg(co.sector, null);
+      const {rank, total} = getSectorRank(co.id, co.sector);
+      const isRated = !CATS.every(c => ratings[co.id][c.id].seeded);
+      if (!sectorOvg || !isRated) return "";
+      const diff = ov - sectorOvg;
+      const diffStr = (diff >= 0 ? "+" : "") + diff.toFixed(1);
+      const diffCol = diff >= 0.3 ? "#4CAF82" : diff <= -0.3 ? "#D94F4F" : "#C9A84C";
+      const peerCount = COMPANIES.filter(c => c.sector === co.sector).length;
+      const shortName = co.name.length > 24 ? co.name.slice(0,24) + "…" : co.name;
+      const rankHtml = rank
+        ? "<div style='font-size:18px;font-weight:700;color:#C9A84C'>#" + rank + "</div>"
+          + "<div style='font-size:10px;color:#7888a8;margin-top:2px'>of " + total + " rated</div>"
+          + "<div style='font-size:10px;color:#485878'>" + peerCount + " total in sector</div>"
+        : "";
+      const catChips = CATS.map(cat => {
+        const catAvg = getSectorAvg(co.sector, cat.id);
+        const catScore = getCatScore(ratings[co.id], cat.id);
+        const isSeeded = ratings[co.id][cat.id].seeded && !approvedFlags[co.id+"_"+cat.id];
+        if (!catAvg || isSeeded) return "";
+        const d = catScore - catAvg;
+        const dc = d >= 0.3 ? "#4CAF82" : d <= -0.3 ? "#D94F4F" : "#7888a8";
+        return "<div style='background:#192738;border-radius:3px;padding:5px 8px;display:flex;align-items:center;gap:5px'>"
+          + "<span style='font-size:11px;color:#7888a8'>" + cat.icon + "</span>"
+          + "<span style='font-size:11px;color:" + dc + "'>" + (d>=0?"+":"") + d.toFixed(1) + "</span>"
+          + "</div>";
+      }).join("");
+      return "<div style='background:#1e2d3d;border:1px solid #253550;border-radius:4px;padding:14px 18px;margin-bottom:18px'>"
+        + "<p style='font-size:9px;letter-spacing:3px;color:#7888a8;text-transform:uppercase;margin-bottom:12px'>Sector Benchmark — " + co.sector + "</p>"
+        + "<div style='display:flex;gap:24px;flex-wrap:wrap;align-items:center'>"
+          + "<div style='text-align:center'>"
+            + "<div style='font-size:22px;font-weight:700;color:" + diffCol + "'>" + diffStr + "</div>"
+            + "<div style='font-size:10px;color:#7888a8;margin-top:2px'>vs sector avg</div>"
+          + "</div>"
+          + "<div style='flex:1;min-width:160px'>"
+            + "<div style='display:flex;justify-content:space-between;margin-bottom:4px'>"
+              + "<span style='font-size:11px;color:#7888a8'>Sector avg</span>"
+              + "<span style='font-size:11px;color:#a8b8c8'>" + sectorOvg.toFixed(1) + "</span>"
+            + "</div>"
+            + "<div style='background:#192738;border-radius:2px;height:5px;margin-bottom:8px'>"
+              + "<div style='width:" + ((sectorOvg-1)/4*100).toFixed(0) + "%;background:#253550;height:5px;border-radius:2px'></div>"
+            + "</div>"
+            + "<div style='display:flex;justify-content:space-between;margin-bottom:4px'>"
+              + "<span style='font-size:11px;color:#a8b8c8'>" + shortName + "</span>"
+              + "<span style='font-size:11px;color:" + diffCol + "'>" + ov.toFixed(1) + "</span>"
+            + "</div>"
+            + "<div style='background:#192738;border-radius:2px;height:5px'>"
+              + "<div style='width:" + ((ov-1)/4*100).toFixed(0) + "%;background:" + diffCol + ";height:5px;border-radius:2px'></div>"
+            + "</div>"
+          + "</div>"
+          + "<div style='text-align:center'>" + rankHtml + "</div>"
+        + "</div>"
+        + "<div style='margin-top:12px;display:flex;gap:8px;flex-wrap:wrap'>" + catChips + "</div>"
+        + "</div>";
+    })()}
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-bottom:28px">
       ${CATS.map(cat => {
         const flagKey = co.id+"_"+cat.id;
@@ -1703,7 +1832,13 @@ async function confirmSubmitWithout() {
 
 async function submitRating() {
   if (!modalStars) { showToast("Please select a star rating."); return; }
-  if (!user) { showAuth("register"); return; }
+  if (!user) {
+    // Guest: save pending rating and prompt sign-up
+    pendingRating = { co: modalState.co, cat: modalState.cat, score: modalStars, url: document.getElementById("m-url").value.trim() };
+    closeModal();
+    showGuestPrompt();
+    return;
+  }
   const sourceUrl = document.getElementById("m-url").value.trim();
   // Show nudge if no URL and not already confirmed
   if (!sourceUrl && !nudgeShown) {
@@ -1800,12 +1935,26 @@ function getFiltered() {
      (c.cvr && c.cvr.includes(currentSearch)) ||
      (c.country && c.country.toLowerCase().includes(currentSearch.toLowerCase())))
   );
+  const isRated = (co) => !CATS.every(c => ratings[co.id][c.id].seeded);
+
   if (currentSort === "revenue") {
-    list.sort((a,b) => b.rev - a.rev);
+    list.sort((a,b) => {
+      const ra = isRated(a), rb = isRated(b);
+      if (ra !== rb) return ra ? -1 : 1;
+      return b.rev - a.rev;
+    });
   } else if (currentSort === "name") {
-    list.sort((a,b) => a.name.localeCompare(b.name));
+    list.sort((a,b) => {
+      const ra = isRated(a), rb = isRated(b);
+      if (ra !== rb) return ra ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    });
   } else if (currentSort === "rating") {
-    list.sort((a,b) => getOverallForCo(b.id) - getOverallForCo(a.id));
+    list.sort((a,b) => {
+      const ra = isRated(a), rb = isRated(b);
+      if (ra !== rb) return ra ? -1 : 1;
+      return getOverallForCo(b.id) - getOverallForCo(a.id);
+    });
   } else if (currentSort.startsWith("cat_")) {
     const catId = currentSort.replace("cat_", "");
     list.sort((a,b) => {
@@ -1818,7 +1967,6 @@ function getFiltered() {
         return cr.total / cr.count;
       };
       const sa = getScore(a.id), sb = getScore(b.id);
-      // Put unrated (0) at the end
       if (sa === 0 && sb === 0) return 0;
       if (sa === 0) return 1;
       if (sb === 0) return -1;
@@ -1829,6 +1977,7 @@ function getFiltered() {
 }
 
 function renderGrid() {
+  renderRecentActivity();
   const filtered = getFiltered();
   const totalPages = Math.ceil(filtered.length / PG);
   if (currentPage > totalPages) currentPage = 1;
@@ -1887,6 +2036,19 @@ function renderGrid() {
         <span style="font-size:12px;color:#7888a8">${fmtRev(co.rev)} DKK</span>
         <span style="font-size:12px;color:#7888a8">Est. ${co.founded}</span>
       </div>
+      ${(()=>{
+        const isRated = !CATS.every(c => ratings[co.id][c.id].seeded);
+        if (!isRated) return "";
+        const sAvg = getSectorAvg(co.sector, null);
+        if (!sAvg) return "";
+        const diff = ov - sAvg;
+        if (Math.abs(diff) < 0.15) return "";
+        const col = diff > 0 ? "#4CAF82" : "#D94F4F";
+        const arrow = diff > 0 ? "↑" : "↓";
+        return `<div style="margin-bottom:6px;display:flex;align-items:center;gap:4px">
+          <span style="font-size:10px;color:${col}">${arrow} ${diff>0?"+":""}${diff.toFixed(1)} vs ${co.sector} avg</span>
+        </div>`;
+      })()}
       ${co.cvr ? `<div style="margin-bottom:7px;display:flex;align-items:center;gap:4px"><span style="font-size:9px;letter-spacing:1.5px;color:#485878;text-transform:uppercase">CVR</span><span style="font-size:10px;color:#7a8aa8;letter-spacing:0.5px">${co.cvr}</span></div>` : ""}
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px 6px">${catBars}</div>
     </div>`;
@@ -2372,6 +2534,7 @@ window.addEventListener("hashchange", function() {
     const coId = hash.replace("company/", "");
     const co = COMPANIES.find(x => x.id === coId);
     if (co) { activeCo = co; showCompany(co); }
+    else if (hash === "compare") { showCompare(); }
     else { showView("home"); renderAll(); }
   } else if (hash === "privacy") {
     showView("privacy"); window.scrollTo(0,0);
@@ -2381,6 +2544,179 @@ window.addEventListener("hashchange", function() {
 });
 
 // ── Session restore on page load ──────────────────────────────────
+
+// ── Guest rating ───────────────────────────────────────────────────
+let pendingRating = null;
+
+function showGuestPrompt() {
+  document.getElementById("guest-modal").style.display = "flex";
+}
+function closeGuestModal() {
+  document.getElementById("guest-modal").style.display = "none";
+}
+
+// After login/signup, flush pending rating
+async function flushPendingRating() {
+  if (!pendingRating || !user) return;
+  const { co, cat, score, url } = pendingRating;
+  pendingRating = null;
+  modalState = { co, cat };
+  modalStars = score;
+  document.getElementById("m-url").value = url || "";
+  nudgeShown = true;
+  await doSubmitRating();
+}
+
+// ── Recently Rated feed ────────────────────────────────────────────
+const recentActivity = []; // populated from Supabase on load
+
+async function loadRecentActivity() {
+  try {
+    const { data, error } = await sb
+      .from("ratings")
+      .select("company_id, category, score, created_at")
+      .not("score", "is", null)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    if (error || !data) return;
+    recentActivity.length = 0;
+    data.forEach(r => recentActivity.push(r));
+    renderRecentActivity();
+  } catch(e) {}
+}
+
+function renderRecentActivity() {
+  const wrap = document.getElementById("recently-rated");
+  if (!wrap) return;
+  // Only show if there are real ratings
+  const valid = recentActivity.filter(r => {
+    const co = COMPANIES.find(c => c.id === r.company_id);
+    const cat = CATS.find(c => c.id === r.category);
+    return co && cat;
+  }).slice(0, 8);
+  if (valid.length < 3) { wrap.style.display = "none"; return; }
+
+  const stars = s => "★".repeat(s) + "☆".repeat(5-s);
+  const timeAgo = ts => {
+    const mins = Math.floor((Date.now() - new Date(ts)) / 60000);
+    if (mins < 60) return mins + "m ago";
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + "h ago";
+    return Math.floor(hrs/24) + "d ago";
+  };
+
+  wrap.style.display = "block";
+  wrap.innerHTML = `
+    <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">
+      <p style="font-size:10px;letter-spacing:2px;color:#7888a8;text-transform:uppercase">Recently Rated</p>
+    </div>
+    <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin">
+      ${valid.map(r => {
+        const co = COMPANIES.find(c => c.id === r.company_id);
+        const cat = CATS.find(c => c.id === r.category);
+        const scoreColor = r.score <= 2 ? "#D94F4F" : r.score >= 4 ? "#4CAF82" : "#E07B3A";
+        return `<div onclick="showCompany(COMPANIES.find(c=>c.id==='${co.id}'))" style="background:#1e2d3d;border:1px solid #253550;border-radius:4px;padding:10px 14px;cursor:pointer;flex:0 0 auto;min-width:180px;max-width:220px;transition:border-color .2s" onmouseover="this.style.borderColor='#C9A84C44'" onmouseout="this.style.borderColor='#253550'">
+          <p style="font-size:11px;font-weight:600;color:#f0f2fa;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${co.name}</p>
+          <p style="font-size:10px;color:#7888a8;margin-bottom:6px">${cat.icon} ${cat.label}</p>
+          <span style="font-size:14px;color:${scoreColor};letter-spacing:1px">${stars(r.score)}</span>
+          <p style="font-size:10px;color:#485878;margin-top:4px">${timeAgo(r.created_at)}</p>
+        </div>`;
+      }).join("")}
+    </div>`;
+}
+
+// ── Company Compare ────────────────────────────────────────────────
+let cmpSelected = { a: null, b: null };
+
+function showCompare() {
+  showView("compare");
+  location.hash = "compare";
+  renderCmpResult();
+}
+
+function cmpSearch(side) {
+  const q = document.getElementById("cmp-"+side+"-inp").value.toLowerCase().trim();
+  const drop = document.getElementById("cmp-"+side+"-drop");
+  if (!q) { drop.style.display = "none"; return; }
+  const matches = COMPANIES.filter(c => c.name.toLowerCase().includes(q)).slice(0, 8);
+  if (!matches.length) { drop.style.display = "none"; return; }
+  drop.style.display = "block";
+  drop.innerHTML = matches.map(c => `
+    <div onclick="cmpSelect('${side}','${c.id}')" style="padding:8px 12px;cursor:pointer;font-size:13px;color:#f0f2fa;border-bottom:1px solid #192738" onmouseover="this.style.background='#192738'" onmouseout="this.style.background=''">
+      ${c.name} <span style="color:#7888a8;font-size:11px">${c.sector}</span>
+    </div>`).join("");
+}
+
+function cmpSelect(side, id) {
+  cmpSelected[side] = COMPANIES.find(c => c.id === id);
+  document.getElementById("cmp-"+side+"-inp").value = cmpSelected[side].name;
+  document.getElementById("cmp-"+side+"-drop").style.display = "none";
+  renderCmpResult();
+}
+
+function getCatScoreForCo(coId, catId) {
+  const fk = coId + "_" + catId;
+  if (approvedFlags[fk] === "violation") return 1;
+  if (approvedFlags[fk] === "frontrunner") return 5;
+  const r = ratings[coId]?.[catId];
+  if (!r || r.seeded) return null;
+  return r.total / r.count;
+}
+
+function renderCmpResult() {
+  const wrap = document.getElementById("cmp-result");
+  const a = cmpSelected.a, b = cmpSelected.b;
+  if (!a && !b) { wrap.innerHTML = `<p style="color:#7888a8;text-align:center;padding:40px 0">Select two companies to compare</p>`; return; }
+  if (!a || !b) { wrap.innerHTML = `<p style="color:#7888a8;text-align:center;padding:40px 0">Select a second company</p>`; return; }
+
+  const starBar = (score) => {
+    if (score === null) return `<span style="color:#485878;font-size:12px">No ratings yet</span>`;
+    const pct = ((score - 1) / 4) * 100;
+    const col = score <= 2 ? "#D94F4F" : score >= 4 ? "#4CAF82" : "#E07B3A";
+    return `<div style="display:flex;align-items:center;gap:8px">
+      <div style="flex:1;background:#192738;border-radius:2px;height:6px">
+        <div style="width:${pct}%;background:${col};height:6px;border-radius:2px;transition:width .4s"></div>
+      </div>
+      <span style="font-size:12px;color:${col};width:28px;text-align:right">${score.toFixed(1)}</span>
+    </div>`;
+  };
+
+  const overallA = getOverallForCo(a.id);
+  const overallB = getOverallForCo(b.id);
+
+  let rows = CATS.map(cat => {
+    const sa = getCatScoreForCo(a.id, cat.id);
+    const sb = getCatScoreForCo(b.id, cat.id);
+    const winner = sa !== null && sb !== null ? (sa > sb ? "a" : sb > sa ? "b" : null) : null;
+    return `
+      <div style="display:grid;grid-template-columns:1fr 80px 1fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #192738">
+        <div>${starBar(sa)}</div>
+        <div style="text-align:center">
+          <span style="font-size:11px;color:#7888a8">${cat.icon} ${cat.label}</span>
+          ${winner ? `<div style="font-size:9px;color:#C9A84C;margin-top:2px">${winner === "a" ? "◀" : "▶"}</div>` : ""}
+        </div>
+        <div>${starBar(sb)}</div>
+      </div>`;
+  }).join("");
+
+  wrap.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 80px 1fr;gap:12px;align-items:center;padding:16px 0;border-bottom:2px solid #253550;margin-bottom:4px">
+      <div>
+        <p style="font-size:14px;font-weight:600;color:#f0f2fa;margin-bottom:2px">${a.name}</p>
+        <p style="font-size:11px;color:#7888a8">${a.sector}</p>
+        <p style="font-size:13px;color:${overallA <= 2 ? "#D94F4F" : overallA >= 4 ? "#4CAF82" : "#E07B3A"};margin-top:4px">${overallA > 0 ? overallA.toFixed(1) + " overall" : "Unrated"}</p>
+      </div>
+      <div style="text-align:center;font-size:11px;color:#C9A84C;letter-spacing:1px">VS</div>
+      <div style="text-align:right">
+        <p style="font-size:14px;font-weight:600;color:#f0f2fa;margin-bottom:2px">${b.name}</p>
+        <p style="font-size:11px;color:#7888a8">${b.sector}</p>
+        <p style="font-size:13px;color:${overallB <= 2 ? "#D94F4F" : overallB >= 4 ? "#4CAF82" : "#E07B3A"};margin-top:4px">${overallB > 0 ? overallB.toFixed(1) + " overall" : "Unrated"}</p>
+      </div>
+    </div>
+    ${rows}
+    <p style="font-size:11px;color:#485878;text-align:center;margin-top:16px">Click either company name above to see its full profile</p>`;
+}
+
 async function init() {
   // Prevent browser autofill from injecting email into search box
   const si = document.getElementById("search-inp");
@@ -2388,6 +2724,7 @@ async function init() {
   renderGuide();
   showHome();
   if (!location.hash) location.hash = "home";
+  loadRecentActivity();
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     const u = session.user;
