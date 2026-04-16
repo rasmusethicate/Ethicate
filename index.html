@@ -464,7 +464,8 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
     <div id="cm-type-desc" style="font-size:12px;color:#7888a8;margin-bottom:14px;min-height:18px;line-height:1.6"></div>
 
     <p style="font-size:10px;letter-spacing:2px;color:#7888a8;text-transform:uppercase;margin-bottom:6px">Source URL <span style="color:#7888a8;letter-spacing:0;text-transform:none">— optional but encouraged</span></p>
-    <input class="ipt" id="cm-url" placeholder="https://example.com/article" style="margin-bottom:14px"/>
+    <input class="ipt" id="cm-url" placeholder="https://example.com/article" style="margin-bottom:8px"/>
+    <input class="ipt" id="cm-note" placeholder="Describe the source — e.g. Court ruling confirming fine 2024" style="margin-bottom:14px;font-size:12px"/>
 
     <div style="background:#1e2d3d;border:1px solid #3a5070;border-radius:3px;padding:10px 14px;margin-bottom:16px">
       <p style="font-size:11px;color:#7888a8;line-height:1.6">Your submission will be shown publicly alongside the existing sources for this category. If you are challenging the current rating, your source will be flagged for admin review.</p>
@@ -521,7 +522,8 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
     <p id="m-label" style="font-size:12px;margin-bottom:16px;min-height:18px"></p>
     <div style="height:1px;background:#192738;margin-bottom:14px"></div>
     <p style="font-size:10px;letter-spacing:2px;color:#7888a8;text-transform:uppercase;margin-bottom:6px">Source URL <span style="color:#7888a8;letter-spacing:0;text-transform:none">— optional</span></p>
-    <input class="ipt" id="m-url" placeholder="https://example.com/article" style="margin-bottom:14px"/>
+    <input class="ipt" id="m-url" placeholder="https://example.com/article" style="margin-bottom:8px"/>
+    <input class="ipt" id="m-note" placeholder="Describe the source — e.g. DR article on wage violations 2023" style="margin-bottom:14px;font-size:12px"/>
     <div style="margin-bottom:14px">
       <p style="font-size:10px;color:#7888a8;line-height:1.6;text-align:center">Your rating will be published as a citizen opinion. Adding a source makes it significantly more impactful.</p>
     </div>
@@ -1193,7 +1195,7 @@ let challenges = {}; // key: companyId_catId → {support: N, challenge: N, urls
 
 // ── Load real ratings from Supabase ──────────────────────────────
 async function loadRatings() {
-  const { data, error } = await sb.from("ratings").select("company_id, category, score, source_url");
+  const { data, error } = await sb.from("ratings").select("company_id, category, score, source_url, source_note");
   if (error || !data) return;
   // Reset to neutral seed then layer real ratings on top
   seedRatings();
@@ -1214,12 +1216,13 @@ async function loadRatings() {
       if (!sourceUrls[key]) sourceUrls[key] = [];
       const alreadyHas = sourceUrls[key].some(s => s.url === row.source_url);
       if (!alreadyHas) {
-        sourceUrls[key].push({url: row.source_url, score: row.score});
+        sourceUrls[key].push({url: row.source_url, score: row.score, note: row.source_note || ""});
         allSources.push({
           company_id: row.company_id,
           category: row.category,
           url: row.source_url,
-          score: row.score
+          score: row.score,
+          note: row.source_note || ""
         });
       }
     }
@@ -1229,14 +1232,14 @@ async function loadRatings() {
 
 // ── Load challenges ──────────────────────────────────────────────
 async function loadChallenges() {
-  const { data, error } = await sb.from("challenges").select("company_id, category, challenge_type, source_url");
+  const { data, error } = await sb.from("challenges").select("company_id, category, challenge_type, source_url, source_note");
   if (error || !data) return;
   challenges = {};
   data.forEach(row => {
     const key = row.company_id + "_" + row.category;
     if (!challenges[key]) challenges[key] = {support: 0, challenge: 0, urls: []};
     challenges[key][row.challenge_type]++;
-    if (row.source_url) challenges[key].urls.push({url: row.source_url, type: row.challenge_type});
+    if (row.source_url) challenges[key].urls.push({url: row.source_url, type: row.challenge_type, note: row.source_note || ""});
   });
 }
 
@@ -1260,12 +1263,12 @@ async function loadFlags() {
 async function loadUserRatings() {
   if (!user) return;
   const { data, error } = await sb.from("ratings")
-    .select("company_id, category, score, source_url")
+    .select("company_id, category, score, source_url, source_note")
     .eq("user_id", user.id);
   if (error || !data) return;
   userRatings = {};
   data.forEach(row => {
-    userRatings[row.company_id + "_" + row.category] = {score: row.score, url: row.source_url || ""};
+    userRatings[row.company_id + "_" + row.category] = {score: row.score, url: row.source_url || "", note: row.source_note || ""};
   });
 }
 
@@ -1690,7 +1693,8 @@ function showCompany(co) {
           <div style="display:flex;gap:1px">${[1,2,3,4,5].map(i=>`<svg width="9" height="9" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${i<=(s.score||3)?"#C9A84C":"none"}" stroke="${i<=(s.score||3)?"#C9A84C":"#2a3a5e"}" stroke-width="1.5"/></svg>`).join("")}</div>
           <span style="font-size:9px;color:${starColor};font-weight:600">${s.score||3} star${(s.score||3)!==1?"s":""}</span>
         </div>
-        <a href="${s.url}" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:#C9A84C;word-break:break-all;line-height:1.5;display:block;margin-bottom:6px">${s.url}</a>
+        <a href="${s.url}" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:#C9A84C;word-break:break-all;line-height:1.5;display:block;margin-bottom:${s.note?'3px':'6px'}">${s.url}</a>
+        ${s.note ? `<div style="font-size:11px;color:#a8b8c8;line-height:1.5;margin-bottom:6px;font-style:italic">${s.note}</div>` : ""}
         <div style="display:flex;gap:4px">
           <button style="padding:3px 8px;background:#4CAF820d;border:1px solid #4CAF8233;border-radius:2px;color:#4CAF82;font-size:9px;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="openChallengeModal('${co.id}','${cat.id}','${co.name}','${cat.label}','support')">↑ Support this</button>
           <button style="padding:3px 8px;background:#D94F4F0d;border:1px solid #D94F4F33;border-radius:2px;color:#D94F4F;font-size:9px;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="openChallengeModal('${co.id}','${cat.id}','${co.name}','${cat.label}','challenge')">↓ Challenge this</button>
@@ -1699,7 +1703,8 @@ function showCompany(co) {
     }).join("")}
     ${chUrls.map(c=>`<div style="margin-bottom:6px;padding:6px 8px;background:#1e2d3d;border-radius:2px;border:1px solid ${c.type==="support"?"#4CAF8233":"#D94F4F33"}">
       <div style="font-size:9px;letter-spacing:1px;color:${c.type==="support"?"#4CAF82":"#D94F4F"};text-transform:uppercase;margin-bottom:4px">${c.type==="support"?"↑ Supporting source":"↓ Challenging source"}</div>
-      <a href="${c.url}" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:#C9A84C;word-break:break-all;line-height:1.5">${c.url}</a>
+      <a href="${c.url}" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:#C9A84C;word-break:break-all;line-height:1.5;display:block;margin-bottom:${c.note?'3px':'0'}">${c.url}</a>
+      ${c.note ? `<div style="font-size:11px;color:#a8b8c8;line-height:1.5;font-style:italic">${c.note}</div>` : ""}
     </div>`).join("")}
   </div>`;
 })()}
@@ -1718,6 +1723,7 @@ function openModal(co, cat) {
   document.getElementById("m-cat").textContent = cat.label;
   document.getElementById("m-cat-detail").textContent = cat.detail;
   document.getElementById("m-url").value = ur ? (ur.url || "") : "";
+  document.getElementById("m-note").value = ur ? (ur.note || "") : "";
   const catExamples = {
     work: {
       s5: "Consistently rated among Denmark's best workplaces, with above-market wages, strong union cooperation, transparent pay structures, and zero serious safety incidents.",
@@ -1860,8 +1866,10 @@ function closeModal() {
   const nudge = document.getElementById("m-nudge");
   const btn = document.getElementById("m-submit");
   const url = document.getElementById("m-url");
+  const note = document.getElementById("m-note");
   if (nudge) nudge.style.display = "none";
   if (btn) { btn.style.display = "block"; btn.textContent = "Submit Rating"; btn.disabled = false; }
+  if (note) note.value = "";
   if (url) url.value = "";
 }
 
@@ -1908,6 +1916,7 @@ async function submitRating() {
 async function doSubmitRating() {
   const {co, cat} = modalState;
   const sourceUrl = document.getElementById("m-url").value.trim();
+  const sourceNote = document.getElementById("m-note").value.trim();
   const btn = document.getElementById("m-submit");
   btn.textContent = "Saving…"; btn.disabled = true;
 
@@ -1917,7 +1926,8 @@ async function doSubmitRating() {
     company_id: co.id,
     category: cat.id,
     score: modalStars,
-    source_url: sourceUrl || null
+    source_url: sourceUrl || null,
+    source_note: sourceNote || null
   }, { onConflict: "user_id,company_id,category" });
 
   btn.textContent = "Submit Rating"; btn.disabled = false;
@@ -1938,7 +1948,7 @@ async function doSubmitRating() {
     // New real vote on top of existing real votes
     ratings[co.id][cat.id] = {total: old.total + modalStars, count: old.count + 1};
   }
-  userRatings[key] = {score: modalStars, url: sourceUrl};
+  userRatings[key] = {score: modalStars, url: sourceUrl, note: sourceNote};
 
   // Update source URLs in local state so they show immediately without refresh
   if (sourceUrl) {
@@ -1949,7 +1959,7 @@ async function doSubmitRating() {
     if (prev && prev.url) {
       sourceUrls[srcKey] = sourceUrls[srcKey].filter(s => s.url !== prev.url);
     }
-    sourceUrls[srcKey].push({url: sourceUrl, score: modalStars});
+    sourceUrls[srcKey].push({url: sourceUrl, score: modalStars, note: sourceNote});
   }
 
   closeModal();
@@ -2472,6 +2482,7 @@ function openChallengeModal(coId, catId, coName, catLabel, preselect) {
   document.getElementById("cm-company").textContent = coName;
   document.getElementById("cm-cat").textContent = catLabel;
   document.getElementById("cm-url").value = "";
+  document.getElementById("cm-note").value = "";
   document.getElementById("cm-type-desc").textContent = "";
   document.getElementById("cm-support-btn").style.opacity = "0.5";
   document.getElementById("cm-challenge-btn").style.opacity = "0.5";
@@ -2497,6 +2508,7 @@ function closeChallengeModal() {
 async function submitChallenge() {
   if (!selectedChallengeType) { showToast("Please select Support or Challenge."); return; }
   const url = document.getElementById("cm-url").value.trim();
+  const note = document.getElementById("cm-note").value.trim();
   const btn = document.getElementById("cm-submit");
   btn.textContent = "Submitting…"; btn.disabled = true;
 
@@ -2504,7 +2516,8 @@ async function submitChallenge() {
     company_id: challengeState.coId,
     category: challengeState.catId,
     challenge_type: selectedChallengeType,
-    source_url: url || null
+    source_url: url || null,
+    source_note: note || null
   });
 
   btn.textContent = "Submit"; btn.disabled = false;
