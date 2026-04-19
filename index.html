@@ -137,7 +137,7 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
 <body>
 
 <nav>
-  <div class="logo" onclick="showHome()">
+  <div class="logo" onclick="showHome();window.scrollTo(0,0);location.hash='home';" style="position:relative;z-index:100">
     <svg width="22" height="22" viewBox="0 0 28 28"><polygon points="14.0,2.0 22.5,5.5 26.0,14.0 22.5,22.5 14.0,26.0 5.5,22.5 2.0,14.0 5.5,5.5" fill="none" stroke="#C9A84C" stroke-width="1.5"/><polygon points="14.0,6.0 19.7,8.3 22.0,14.0 19.7,19.7 14.0,22.0 8.3,19.7 6.0,14.0 8.3,8.3" fill="#C9A84C18"/></svg>
     <span>ETHICATE</span>
   </div>
@@ -1523,7 +1523,7 @@ function updateNav() {
   const nav = document.getElementById("nav-right");
   if (user) {
     nav.innerHTML = `<span style="font-size:13px;color:#C9A84C">◆ ${user.name}</span>
-      <span style="font-size:11px;color:#7888a8;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showDeleteModal()">Delete account</span>
+      <span style="font-size:11px;color:#7888a8;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showAbout()">About</span>
       <span style="font-size:11px;color:#7888a8;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="signOut()">Sign out</span>`;
   } else {
     nav.innerHTML = `<span style="font-size:11px;color:#7888a8;cursor:pointer;letter-spacing:1px;text-transform:uppercase" onclick="showAuth('login')">Sign in</span>
@@ -2018,14 +2018,18 @@ function showToast(msg) {
 
 // ── Home grid ─────────────────────────────────────────────────────
 function getFiltered() {
-  let list = COMPANIES.filter(c =>
-    (currentSector === t("allSector") || currentSector === "All" || c.sector === currentSector) &&
-    (c.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
-     c.hq.toLowerCase().includes(currentSearch.toLowerCase()) ||
-     c.sector.toLowerCase().includes(currentSearch.toLowerCase()) ||
-     (c.cvr && c.cvr.includes(currentSearch)) ||
-     (c.country && c.country.toLowerCase().includes(currentSearch.toLowerCase())))
-  );
+  let list = COMPANIES.filter(c => {
+    if (currentOrigin === "dk" && c.country && c.country !== "DK") return false;
+    if (currentOrigin === "int" && (!c.country || c.country === "DK")) return false;
+    if (currentSector !== t("allSector") && currentSector !== "All" && c.sector !== currentSector) return false;
+    const q = currentSearch.toLowerCase();
+    if (!q) return true;
+    return c.name.toLowerCase().includes(q) ||
+           c.hq.toLowerCase().includes(q) ||
+           c.sector.toLowerCase().includes(q) ||
+           (c.cvr && c.cvr.includes(q)) ||
+           (c.country && c.country.toLowerCase().includes(q));
+  });
   const isRated = (co) => !CATS.every(c => ratings[co.id][c.id].seeded);
 
   if (currentSort === "revenue") {
@@ -2090,7 +2094,7 @@ function renderGrid() {
     const activeCatList = CATS.filter(c => activeCats.has(c.id));
     const ov = (activeCatList.length ? activeCatList : CATS).map(c => coLocked[c.id] !== undefined ? coLocked[c.id] : cr[c.id].total/cr[c.id].count).reduce((a,b)=>a+b,0)/(activeCatList.length || CATS.length);
     const {g, c} = getGrade(ov);
-    const catAbbr = {work:"Work",env:"Environ.",human:"HR",legal:"Legal",tax:"Tax",social:"Social",animal:"Animal",privacy:"Privacy"};
+    const catAbbr = {work:"Work",env:"Environ.",human:"Rights",legal:"Legal",tax:"Tax",social:"Social",animal:"Animal",privacy:"Privacy"};
     const catBars = CATS.map(cat => {
       const s = coLocked[cat.id] !== undefined ? coLocked[cat.id] : cr[cat.id].total / cr[cat.id].count;
       const isActive = activeCats.has(cat.id);
