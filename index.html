@@ -190,7 +190,8 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
             <select id="sort-sel" onchange="sortChanged()" style="background:#16202e;border:1px solid #3a5070;border-radius:2px;padding:7px 10px;color:#f0f2fa;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer">
             <option value="revenue">By Revenue</option>
             <option value="name">By Name</option>
-            <option value="rating">By Overall Rating</option>
+            <option value="rating">Highest Rated First</option>
+            <option value="rating_asc">Lowest Rated First</option>
             <optgroup label="── By Category ──" style="color:#7888a8">
             <option value="cat_work">Work Environment</option>
             <option value="cat_env">Environment</option>
@@ -2049,6 +2050,16 @@ function getFiltered() {
       const ra = isRated(a), rb = isRated(b);
       if (ra !== rb) return ra ? -1 : 1;
       return getOverallForCo(b.id) - getOverallForCo(a.id);
+    });
+  } else if (currentSort === "rating_asc") {
+    list.sort((a,b) => {
+      const ra = isRated(a), rb = isRated(b);
+      if (ra !== rb) return ra ? -1 : 1;
+      const sa = getOverallForCo(a.id), sb = getOverallForCo(b.id);
+      if (sa === 0 && sb === 0) return 0;
+      if (sa === 0) return 1;
+      if (sb === 0) return -1;
+      return sa - sb;
     });
   } else if (currentSort.startsWith("cat_")) {
     const catId = currentSort.replace("cat_", "");
