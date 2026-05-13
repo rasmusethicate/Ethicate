@@ -126,6 +126,30 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
   content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);
   border:6px solid transparent;border-top-color:#C9A84C33;
 }
+
+@media(max-width:640px){
+  nav{padding:0 12px;min-height:48px;gap:6px}
+  .logo span{font-size:15px;letter-spacing:2px}
+  #nav-right span{font-size:10px}
+  #nav-left button{font-size:9px;padding:3px 7px}
+  #view-home,#view-company,#view-auth,#view-about,#view-privacy,#view-profile{padding:0 12px}
+  .card{padding:14px}
+  footer{padding:16px 12px;flex-direction:column;align-items:flex-start;gap:12px}
+  .modal-box{padding:20px;margin:8px}
+  #hero-section{padding:32px 16px 24px}
+  #hero-section h1{font-size:clamp(28px,8vw,48px)}
+  #search-inp{font-size:15px}
+  #grid{grid-template-columns:1fr!important}
+  #sector-btns{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .sec-btn{flex-shrink:0}
+  #sort-sel{width:100%}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .guide-row{flex-direction:column;gap:8px}
+}
+@media(max-width:400px){
+  .logo span{display:none}
+  #nav-right .gold-btn{padding:6px 12px;font-size:10px}
+}
 </style>
 <!-- 100% privacy-first analytics -->
 <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
@@ -154,7 +178,7 @@ footer{border-top:1px solid #304060;padding:22px 32px;display:flex;justify-conte
 <div id="view-home">
   <div style="max-width:1240px;margin:0 auto;padding:32px 16px">
     <!-- Hero -->
-    <div style="text-align:center;margin-bottom:48px;padding:48px 24px 36px;">
+    <div id="hero-section" style="text-align:center;margin-bottom:48px;padding:48px 24px 36px;">
       <p data-t="tagline" style="font-size:10px;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:14px">Citizen-powered trust ratings</p>
       <h1 data-t="hero" class="serif" style="font-size:clamp(36px,6vw,68px);font-weight:300;line-height:1.1;margin-bottom:14px">Your Consumer<br><em style="color:#C9A84C">Compass.</em></h1>
       <p data-t="heroSub" style="font-size:15px;color:#a8b8c8;max-width:460px;margin:0 auto 24px;line-height:1.8">Know which companies deserve your money. Citizen-sourced ethics ratings for the biggest companies operating in Denmark.</p>
@@ -1600,6 +1624,7 @@ function showCompany(co) {
   document.getElementById("company-content").innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
       <button class="ghost-btn" style="padding:6px 14px;font-size:11px" onclick="showHome()">← All Companies</button>
+      <button class="ghost-btn" style="padding:6px 14px;font-size:11px;display:flex;align-items:center;gap:6px" onclick="shareCompany('${co.id}','${co.name}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button>
     </div>
     <div style="background:#1e2d3d;border:1px solid #3a5070;border-left:3px solid #C9A84C;border-radius:2px;padding:10px 14px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px">
       <span style="color:#7888a8;font-size:14px;flex-shrink:0">§</span>
@@ -2524,6 +2549,20 @@ async function showProfile() {
   }).join("");
 }
 
+// ── Share Company ────────────────────────────────────────────────
+function shareCompany(id, name) {
+  const url = window.location.origin + window.location.pathname + "#company/" + id;
+  if (navigator.share) {
+    navigator.share({ title: name + " — Ethicate", text: "Check out " + name + " on Ethicate.", url });
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast("Link copied to clipboard!");
+    }).catch(() => {
+      prompt("Copy this link:", url);
+    });
+  }
+}
+
 // ── Suggest a Company ────────────────────────────────────────────
 function showSuggestModal() {
   document.getElementById("suggest-modal").style.display = "flex";
@@ -2932,8 +2971,23 @@ async function init() {
   const si = document.getElementById("search-inp");
   if (si) { si.value = ""; setTimeout(() => { si.value = ""; }, 100); }
   renderGuide();
-  showHome();
-  if (!location.hash) location.hash = "home";
+  // Respect existing hash on page load (deep linking)
+  const initHash = location.hash.replace("#", "");
+  if (!initHash || initHash === "home") {
+    showHome();
+    location.hash = "home";
+  } else if (initHash.startsWith("company/")) {
+    showHome(); // render grid first so ratings load
+  } else if (initHash === "about") {
+    showAbout();
+  } else if (initHash === "privacy") {
+    showPrivacy();
+  } else if (initHash === "compare") {
+    showHome();
+  } else {
+    showHome();
+    location.hash = "home";
+  }
   loadRecentActivity();
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
@@ -2945,6 +2999,15 @@ async function init() {
   await loadFlags();
   await loadRatings();
   await loadChallenges();
+  // After data loaded, resolve company deep links
+  const h = location.hash.replace("#", "");
+  if (h.startsWith("company/")) {
+    const coId = h.replace("company/", "");
+    const co = COMPANIES.find(x => x.id === coId);
+    if (co) { activeCo = co; showCompany(co); }
+  } else if (h === "compare") {
+    showCompare();
+  }
 }
 
 init();
